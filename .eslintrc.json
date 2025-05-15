@@ -1,0 +1,53 @@
+{
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": [
+      "warn",
+      {
+        "ignoreRestArgs": true
+      }
+    ],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+        "selector": "variable",
+        "leadingUnderscore": "allow"
+      },
+      {
+        "format": ["camelCase", "PascalCase"],
+        "selector": "function"
+      },
+      {
+        "format": ["PascalCase"],
+        "selector": "interface"
+      },
+      {
+        "format": ["PascalCase"],
+        "selector": "typeAlias"
+      }
+    ],
+    "@typescript-eslint/array-type": ["error", { "default": "array-simple" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "ignoreRestSiblings": true,
+        "caughtErrors": "none"
+      }
+    ],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }]
+  },
+  "ignorePatterns": [
+    ".yarn/**",
+    ".pnp.*",
+    ".yarnrc.yml",
+    "node_modules/**",
+    "public/**",
+    "dist/**",
+    "coverage/**",
+    "*.config.js",
+    "*.config.ts"
+  ]
+}
