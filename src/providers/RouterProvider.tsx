@@ -3,6 +3,7 @@ import ApiTestPage from '@/pages/ApiTestPage';
 import LoginPage from '@/pages/LoginPage';
 import SidePage from '@/pages/SidePage';
 import HomePage from '../pages/HomePage';
+import Location from '../pages/Location';
 
 const RouterProvider = () => {
   return (
@@ -12,6 +13,7 @@ const RouterProvider = () => {
         <Route path="/side" element={<SidePage />} />
         <Route path="/api" element={<ApiTestPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/location" element={<Location />} />
         {/* Add more routes here as needed */}
       </Routes>
     </Router>
