@@ -1,6 +1,7 @@
 // src/pages/HomePage.tsx
 import { useRef, useEffect, useState } from 'react';
 import { getNotice, getAllNotice, getCategoryNotice } from '../api/notice';
+import Header from '../components/Common/Header'; // 헤더 컴포넌트
 
 interface Notice {
   id: number;
@@ -31,7 +32,7 @@ const HomePage = () => {
           getCategoryNotice({ page: 1, size: 1, category: '2' }),
           getCategoryNotice({ page: 1, size: 1, category: '3' }),
         ]);
-        setNotice(resAll.data.content)
+        setNotice(resAll.data.content);
         setNotice1(res1.data.content[0]);
         setNotice2(res2.data.content[0]);
         setNotice3(res3.data.content[0]);
@@ -43,9 +44,10 @@ const HomePage = () => {
     fetchAll();
   }, []);
 
-
   return (
     <div className="relative h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+      {/* 상단 헤더 */}
+      <Header />
       {/* 배경 영상 */}
       <video
         className="fixed top-0 left-0 w-full h-full object-cover z-0"
@@ -71,7 +73,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* 메인 섹션 2 */}
+                {/* 메인 섹션 2 */}
         <section
           ref={section2Ref}
           className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
@@ -145,14 +147,61 @@ const HomePage = () => {
           </div>
         </section>
 
-
-
-
         {/* 섹션 3 */}
-        <section ref={section3Ref} className="h-screen flex items-center justify-center snap-start">
-          <h1 className="text-4xl font-bold text-white">
-            입학정보 (수원대학교,대학원 입학처 바로가기/ 우수졸업생 인터뷰 or 졸업 작품)
-          </h1>
+        <section
+          ref={section3Ref}
+          className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
+        >
+          <div className="flex flex-col-reverse md:flex-row w-full max-w-7xl justify-between items-center gap-12">
+            {/* 왼쪽: 입학 관련 카드 3개 */}
+            <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* 입학처 카드 */}
+              <div className="group border border-blue-500 text-blue-400 p-6 rounded-2xl hover:bg-blue-500 hover:text-white transition duration-300">
+                <h3 className="text-xl font-bold mb-2">수원대 입학처</h3>
+                <p className="text-sm mb-4">학부 입학 관련 정보 바로가기</p>
+                <a
+                  href="https://ipsi.suwon.ac.kr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm underline"
+                >
+                  입학처 홈페이지 →
+                </a>
+              </div>
+
+              {/* 대학원 카드 */}
+              <div className="group border border-green-500 text-green-400 p-6 rounded-2xl hover:bg-green-500 hover:text-white transition duration-300">
+                <h3 className="text-xl font-bold mb-2">대학원 입학</h3>
+                <p className="text-sm mb-4">수원대 대학원 입학정보 확인</p>
+                <a
+                  href="https://graduate.suwon.ac.kr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm underline"
+                >
+                  대학원 바로가기 →
+                </a>
+              </div>
+
+              {/* 졸업작품 카드 */}
+              <div className="group border border-yellow-500 text-yellow-400 p-6 rounded-2xl hover:bg-yellow-500 hover:text-black transition duration-300">
+                <h3 className="text-xl font-bold mb-2">졸업작품/인터뷰</h3>
+                <p className="text-sm mb-4">우수 졸업작품 소개 & 졸업생 인터뷰</p>
+                <button className="underline text-sm">영상 보러가기 ▶</button>
+              </div>
+            </div>
+
+            {/* 오른쪽: 설명 텍스트 */}
+            <div className="w-full md:w-1/3 text-center md:text-left">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">🎓 입학정보</h2>
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+                수원대학교 및 대학원 입학에 대한 정보를 확인하세요. <br />
+                입학처 바로가기를 통해 상세한 입학 요강과 전형 안내를 받아볼 수 있으며,
+                <br />
+                우수 졸업생 인터뷰와 졸업작품 영상도 함께 확인해보세요.
+              </p>
+            </div>
+          </div>
         </section>
       </div>
     </div>
