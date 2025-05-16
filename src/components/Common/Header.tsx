@@ -16,8 +16,8 @@ const menus = [
     children: ['학부', '대학원', '취업'],
   },
   {
-    label: '대학소식',
-    children: ['뉴스', '학생이야기'],
+    label: '게시판',
+    children: ['뉴스', '학생이야기', '졸업작품'],
   },
 ];
 
