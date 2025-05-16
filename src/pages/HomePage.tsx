@@ -1,7 +1,8 @@
 // src/pages/HomePage.tsx
-import { useRef, useEffect, useState } from 'react';
-import { getNotice, getAllNotice, getCategoryNotice } from '../api/notice';
-import Header from '../components/Common/Header'; // 헤더 컴포넌트
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getAllNotice, getCategoryNotice, getNotice } from '../api/notice';
+import Header from '../components/Common/Header';// 헤더 컴포넌트
 
 interface Notice {
   id: number;
@@ -21,6 +22,7 @@ const HomePage = () => {
   const [notice1, setNotice1] = useState<Notice | null>(null);
   const [notice2, setNotice2] = useState<Notice | null>(null);
   const [notice3, setNotice3] = useState<Notice | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -177,59 +179,79 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* 섹션 4 */}
+        {/* 섹션 4 - 입학정보 + 홍보 영상 */}
         <section
           ref={section3Ref}
-          className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
+          className="h-auto min-h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-20"
         >
-          <div className="flex flex-col-reverse md:flex-row w-full max-w-7xl justify-between items-center gap-12">
-            {/* 왼쪽: 입학 관련 카드 3개 */}
-            <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* 입학처 카드 */}
-              <div className="group border border-blue-500 text-blue-400 p-6 rounded-2xl hover:bg-blue-500 hover:text-white transition duration-300">
-                <h3 className="text-xl font-bold mb-2">수원대 입학처</h3>
-                <p className="text-sm mb-4">학부 입학 관련 정보 바로가기</p>
-                <a
-                  href="https://ipsi.suwon.ac.kr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm underline"
-                >
-                  입학처 홈페이지 →
-                </a>
-              </div>
+          {/* 🎓 입학정보 타이틀 */}
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">🎓 입학정보</h2>
 
-              {/* 대학원 카드 */}
-              <div className="group border border-green-500 text-green-400 p-6 rounded-2xl hover:bg-green-500 hover:text-white transition duration-300">
-                <h3 className="text-xl font-bold mb-2">대학원 입학</h3>
-                <p className="text-sm mb-4">수원대 대학원 입학정보 확인</p>
-                <a
-                  href="https://graduate.suwon.ac.kr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm underline"
-                >
-                  대학원 바로가기 →
-                </a>
-              </div>
-
-              {/* 졸업작품 카드 */}
-              <div className="group border border-yellow-500 text-yellow-400 p-6 rounded-2xl hover:bg-yellow-500 hover:text-black transition duration-300">
-                <h3 className="text-xl font-bold mb-2">졸업작품/인터뷰</h3>
-                <p className="text-sm mb-4">우수 졸업작품 소개 & 졸업생 인터뷰</p>
-                <button className="underline text-sm">영상 보러가기 ▶</button>
-              </div>
+          {/* 카드 영역 */}
+          <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            {/* 입학처 카드 */}
+            <div className="group border border-blue-500 text-blue-400 p-5 rounded-xl hover:bg-blue-500 hover:text-white transition duration-300">
+              <h3 className="text-lg font-bold mb-2">수원대 입학처</h3>
+              <p className="text-sm mb-3">학부 입학 관련 정보 바로가기</p>
+              <a
+                href="https://ipsi.suwon.ac.kr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm underline"
+              >
+                입학처 홈페이지 →
+              </a>
             </div>
 
-            {/* 오른쪽: 설명 텍스트 */}
-            <div className="w-full md:w-1/3 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">🎓 입학정보</h2>
-              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                수원대학교 및 대학원 입학에 대한 정보를 확인하세요. <br />
-                입학처 바로가기를 통해 상세한 입학 요강과 전형 안내를 받아볼 수 있으며,
-                <br />
-                우수 졸업생 인터뷰와 졸업작품 영상도 함께 확인해보세요.
-              </p>
+            {/* 대학원 카드 */}
+            <div className="group border border-green-500 text-green-400 p-5 rounded-xl hover:bg-green-500 hover:text-white transition duration-300">
+              <h3 className="text-lg font-bold mb-2">대학원 입학</h3>
+              <p className="text-sm mb-3">수원대 대학원 입학정보 확인</p>
+              <a
+                href="https://graduate.suwon.ac.kr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm underline"
+              >
+                대학원 바로가기 →
+              </a>
+            </div>
+
+            {/* 졸업작품 카드 */}
+            <div className="group border border-yellow-500 text-yellow-400 p-5 rounded-xl hover:bg-yellow-500 hover:text-black transition duration-300">
+              <h3 className="text-lg font-bold mb-2">졸업작품/인터뷰</h3>
+              <p className="text-sm mb-3">우수 졸업작품 소개 & 졸업생 인터뷰</p>
+              <button className="underline text-sm">영상 보러가기 ▶</button>
+            </div>
+          </div>
+
+          {/* 🎥 USW VIDEO 타이틀 */}
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">🎥 USW VIDEO</h2>
+
+          {/* 영상 영역 */}
+          <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 영상 1 */}
+            <div className="w-full aspect-[16/9] max-w-[480px] mx-auto">
+              <iframe
+                className="w-full h-full rounded-lg shadow-md"
+                src="https://www.youtube.com/embed/83RTUfy2Lt8?rel=0"
+                title="하늘에서 본 수원대"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+
+            {/* 영상 2 */}
+            <div className="w-full aspect-[16/9] max-w-[480px] mx-auto">
+              <iframe
+                className="w-full h-full rounded-lg shadow-md"
+                src="https://www.youtube.com/embed/Jww1uiWUmmk?rel=0"
+                title="수원대학교 기숙사 투어"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
         </section>
