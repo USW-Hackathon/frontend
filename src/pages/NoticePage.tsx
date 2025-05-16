@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAllNotice, getCategoryNotice } from '../api/notice';
-import Header from '../components/Common/Header'; //상단바 헤더 컴포넌트
+import Header from '../components/Common/Header';
 
 interface Notice {
   id: number;
@@ -22,15 +23,20 @@ const categories = [
 const NoticePage = () => {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
+  const size = 10;
 
   const fetchNotices = async () => {
     try {
       const res =
         selectedCategory === 'all'
-          ? await getAllNotice({ page: 1, size: 10 })
-          : await getCategoryNotice({ page: 1, size: 10, category: Number(selectedCategory) });
+          ? await getAllNotice({ page, size })
+          : await getCategoryNotice({ page, size, category: Number(selectedCategory) });
 
       setNotices(res.data.content);
+      setTotalPages(res.data.totalPages || 1);
     } catch (e) {
       console.error('공지사항 불러오기 실패:', e);
     }
@@ -38,11 +44,23 @@ const NoticePage = () => {
 
   useEffect(() => {
     fetchNotices();
-  }, [selectedCategory]);
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }, [selectedCategory, page]);
+
+  const handlePrev = () => {
+    if (page > 1) setPage(prev => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage(prev => prev + 1);
+  };
+
+  const handlePageClick = (pageNum: number) => {
+    setPage(pageNum);
+  };
 
   return (
     <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
-      {/* 헤더 */}
       <Header />
 
       {/* 타이틀 영역 */}
@@ -76,7 +94,10 @@ const NoticePage = () => {
             {categories.map(cat => (
               <button
                 key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
+                onClick={() => {
+                  setSelectedCategory(cat.value);
+                  setPage(1); // 카테고리 변경 시 1페이지로 초기화
+                }}
                 className={`px-4 py-2 text-sm font-semibold rounded-t-md transition
                   ${
                     selectedCategory === cat.value
@@ -94,7 +115,11 @@ const NoticePage = () => {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <ul className="divide-y divide-gray-300">
             {notices.map(notice => (
-              <li key={notice.id} className="py-6 hover:bg-gray-100 transition rounded-md px-4">
+              <li
+                key={notice.id}
+                onClick={() => navigate(`/notice/${notice.id}`)}
+                className="cursor-pointer py-6 hover:bg-gray-100 transition rounded-md px-4"
+              >
                 <h2 className="text-xl font-semibold mb-1">{notice.title}</h2>
                 <p className="text-gray-500 text-sm mb-2">
                   작성자: {notice.writer} | 날짜: {notice.createdAt.split('T')[0]}
@@ -103,6 +128,35 @@ const NoticePage = () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* 페이지네이션 */}
+        <div className="flex justify-center gap-2 pb-12">
+          <button
+            onClick={handlePrev}
+            disabled={page === 1}
+            className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-30"
+          >
+            이전
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+            <button
+              key={p}
+              onClick={() => handlePageClick(p)}
+              className={`px-3 py-1 rounded ${
+                page === p ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+          <button
+            onClick={handleNext}
+            disabled={page === totalPages}
+            className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-30"
+          >
+            다음
+          </button>
         </div>
       </div>
 
