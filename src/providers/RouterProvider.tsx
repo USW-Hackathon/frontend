@@ -6,6 +6,10 @@ import HomePage from '../pages/HomePage';
 import Location from '../pages/Location';
 import NoticePage from '../pages/NoticePage';
 import NoticeDetailPage from '../pages/NoticeDetailPage';
+import BoardPage from '../pages/BoardPage';
+import BoardWritePage from '../pages/BoardWritePage';
+import BoardDetailPage from '../pages/BoardDetailPage';
+
 const RouterProvider = () => {
   return (
     <Router>
@@ -17,6 +21,9 @@ const RouterProvider = () => {
         <Route path="/api" element={<ApiTestPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/location" element={<Location />} />
+        <Route path="/board" element={<BoardPage />} />
+        <Route path="/board-posts/write" element={<BoardWritePage />} />
+        <Route path="/board-posts/:id" element={<BoardDetailPage />} />
         {/* Add more routes here as needed */}
       </Routes>
     </Router>
