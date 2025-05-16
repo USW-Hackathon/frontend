@@ -13,7 +13,6 @@ interface Notice {
   category: number;
 }
 
-
 const HomePage = () => {
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
@@ -27,7 +26,7 @@ const HomePage = () => {
     const fetchAll = async () => {
       try {
         const [resAll, res1, res2, res3] = await Promise.all([
-          getAllNotice({ page: 1, size: 5, }),
+          getAllNotice({ page: 1, size: 5 }),
           getCategoryNotice({ page: 1, size: 1, category: '1' }),
           getCategoryNotice({ page: 1, size: 1, category: '2' }),
           getCategoryNotice({ page: 1, size: 1, category: '3' }),
@@ -73,7 +72,37 @@ const HomePage = () => {
           </div>
         </section>
 
-                {/* 메인 섹션 2 */}
+        {/* 메인 섹션 2 */}
+        <section className="h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center drop-shadow-lg">어떤 학부가 궁금하세요?</h2>
+          <p className="text-gray-300 text-center mb-12 max-w-2xl drop-shadow-md">
+            수원대학교 지능형SW융합대학은 다양한 학부와 전공을 통해 실무 중심의 교육을 제공합니다. 원하는 학부를 선택해
+            자세한 정보를 확인해보세요.
+          </p>
+
+          {/* 카드 컨테이너 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
+            {[
+              { title: '컴퓨터학부', link: '/departments/computer' },
+              { title: '정보통신학부', link: '/departments/ict' },
+              { title: '데이터과학부', link: '/departments/data' },
+              { title: '클라우드융복합', link: '/departments/cloud' },
+            ].map((dept, idx) => (
+              <a
+                key={idx}
+                href={dept.link}
+                className="rounded-2xl p-6 h-40 flex flex-col justify-center items-center
+                   bg-white text-black border border-gray-200 shadow-md
+                   transition duration-300 hover:shadow-lg hover:-translate-y-1"
+              >
+                <h3 className="text-xl font-bold mb-2">{dept.title}</h3>
+                <p className="text-sm text-gray-600">자세히 보기 →</p>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* 메인 섹션 3 */}
         <section
           ref={section2Ref}
           className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
@@ -85,7 +114,8 @@ const HomePage = () => {
               <div className="w-full md:w-1/3 text-center md:text-left">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">📢 공지사항</h2>
                 <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                  수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.<br />
+                  수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.
+                  <br />
                   학부, 대학원, 취업 관련 주요 공지사항을 빠르게 전달해드립니다.
                 </p>
               </div>
@@ -93,7 +123,7 @@ const HomePage = () => {
               {/* 공지 카드 */}
               <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* 학부 */}
-                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-sm">
+                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
                   <h3 className="text-xl font-bold mb-2">학부</h3>
                   <div className="mb-2">
                     <p className="text-base font-semibold truncate">{notice1?.title || '제목 로딩중'}</p>
@@ -101,11 +131,11 @@ const HomePage = () => {
                       {notice1?.content ? notice1.content.slice(0, 40) + '...' : '내용 로딩중'}
                     </p>
                   </div>
-                  <p className="text-xs" >{notice1?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
+                  <p className="text-xs">{notice1?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
                 </div>
 
                 {/* 대학원 */}
-                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-sm">
+                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
                   <h3 className="text-xl font-bold mb-2">대학원</h3>
                   <div className="mb-2">
                     <p className="text-base font-semibold truncate">{notice2?.title || '제목 로딩중'}</p>
@@ -113,11 +143,11 @@ const HomePage = () => {
                       {notice2?.content ? notice2.content.slice(0, 40) + '...' : '내용 로딩중'}
                     </p>
                   </div>
-                  <p className="text-xs" >{notice1?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
+                  <p className="text-xs">{notice2?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
                 </div>
 
                 {/* 취업 */}
-                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-sm">
+                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
                   <h3 className="text-xl font-bold mb-2">취업</h3>
                   <div className="mb-2">
                     <p className="text-base font-semibold truncate">{notice3?.title || '제목 로딩중'}</p>
@@ -125,7 +155,7 @@ const HomePage = () => {
                       {notice3?.content ? notice3.content.slice(0, 40) + '...' : '내용 로딩중'}
                     </p>
                   </div>
-                  <p className="text-xs" >{notice3?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
+                  <p className="text-xs">{notice3?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
                 </div>
               </div>
             </div>
@@ -136,7 +166,7 @@ const HomePage = () => {
                 {notice.map((item, index) => (
                   <li
                     key={index}
-                    className="flex justify-between px-4 py-2 rounded hover:bg-black hover:bg-opacity-20 transition duration-300 cursor-pointer"
+                    className="flex justify-between px-4 py-2 rounded hover:bg-black hover:bg-opacity-20 hover:shadow-inner hover:-translate-y-[2px] transition duration-300 cursor-pointer"
                   >
                     <span className="font-bold">{item.title}</span>
                     <span className="text-gray-400">{item.createdAt?.split('T')[0]}</span>
@@ -147,7 +177,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* 섹션 3 */}
+        {/* 섹션 4 */}
         <section
           ref={section3Ref}
           className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
