@@ -1,13 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { updateRefresh } from '@/api/auth/login';
+import { login } from '@/api/auth/login';
+import { setCookie } from '@/utils/cookies';
 
 const useLogin = () => {
   return useMutation({
-    mutationFn: updateRefresh, 
+    mutationFn: login, 
     onSuccess: (data) => {
-      console.log('로그인 성공:', data);
+      console.log('로그인 성공:', data.data.userName);
+      setCookie('username', data.data.userName, { path: '/', secure: true });
       window.location.href = '/';
-    
+      
     },
     onError: (error) => {
       console.error('로그인 실패:', error);
