@@ -114,7 +114,12 @@ const HomePage = () => {
             <div className="flex flex-col md:flex-row items-start justify-between gap-12">
               {/* 왼쪽 설명 */}
               <div className="w-full md:w-1/3 text-center md:text-left">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">📢 공지사항</h2>
+                <h2
+                  onClick={() => navigate('/notice')} // ✅ 클릭 시 이동
+                  className="text-3xl md:text-4xl font-bold mb-4 cursor-pointer hover:text-yellow-300 transition duration-300"
+                >
+                  📢 공지사항
+                </h2>
                 <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
                   수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.
                   <br />
