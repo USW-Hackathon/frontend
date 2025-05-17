@@ -29,9 +29,9 @@ const HomePage = () => {
       try {
         const [resAll, res1, res2, res3] = await Promise.all([
           getAllNotice({ page: 1, size: 5 }),
-          getCategoryNotice({ page: 1, size: 1, category: '1' }),
-          getCategoryNotice({ page: 1, size: 1, category: '2' }),
-          getCategoryNotice({ page: 1, size: 1, category: '3' }),
+          getCategoryNotice({ page: 1, size: 1, category: 1 }),
+          getCategoryNotice({ page: 1, size: 1, category: 2 }),
+          getCategoryNotice({ page: 1, size: 1, category: 3 }),
         ]);
         setNotice(resAll.data.content);
         setNotice1(res1.data.content[0]);
@@ -118,19 +118,17 @@ const HomePage = () => {
                   onClick={() => navigate('/notice')} // ✅ 클릭 시 이동
                   className="text-3xl md:text-4xl font-bold mb-4 cursor-pointer hover:text-yellow-300 transition duration-300"
                 >
-                  📢 공지사항
+                  공지사항
                 </h2>
                 <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
                   수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.
-                  <br />
-                  학부, 대학원, 취업 관련 주요 공지사항을 빠르게 전달해드립니다.
                 </p>
               </div>
 
               {/* 공지 카드 */}
               <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* 학부 */}
-                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
+                <div className="bg-white/15 text-white  border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
                   <h3 className="text-xl font-bold mb-2">학부</h3>
                   <div className="mb-2">
                     <p className="text-base font-semibold truncate">{notice1?.title || '제목 로딩중'}</p>
@@ -142,7 +140,7 @@ const HomePage = () => {
                 </div>
 
                 {/* 대학원 */}
-                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
+                <div className="bg-white/15 text-white  border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
                   <h3 className="text-xl font-bold mb-2">대학원</h3>
                   <div className="mb-2">
                     <p className="text-base font-semibold truncate">{notice2?.title || '제목 로딩중'}</p>
@@ -154,7 +152,7 @@ const HomePage = () => {
                 </div>
 
                 {/* 취업 */}
-                <div className="bg-white border border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
+                <div className="bg-white/15 text-white  border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
                   <h3 className="text-xl font-bold mb-2">취업</h3>
                   <div className="mb-2">
                     <p className="text-base font-semibold truncate">{notice3?.title || '제목 로딩중'}</p>
@@ -173,7 +171,7 @@ const HomePage = () => {
                 {notice.map((item, index) => (
                   <li
                     key={index}
-                    className="flex justify-between px-4 py-2 rounded hover:bg-black hover:bg-opacity-20 hover:shadow-inner hover:-translate-y-[2px] transition duration-300 cursor-pointer"
+                    className="border-b border-white/30 flex justify-between px-4 py-2 rounded hover:bg-black hover:bg-opacity-20 hover:shadow-inner hover:-translate-y-[2px] transition duration-300 cursor-pointer"
                   >
                     <span className="font-bold">{item.title}</span>
                     <span className="text-gray-400">{item.createdAt?.split('T')[0]}</span>
@@ -260,8 +258,29 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+
+        <section className="h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 relative">
+          <div
+            className="absolute inset-0 bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url('https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png')`,
+              backgroundSize: 'contain',  // 또는 'cover'
+              backgroundPosition: 'center',
+              opacity: 0.3,
+            }}
+          />
+
+          <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg italic mb-5">
+              Intelligence Convergence University
+            </h1>
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg italic">
+              Suwon University
+            </h1>
+          </div>
+        </section>
       </div>
-    </div>
+    </div >
   );
 };
 

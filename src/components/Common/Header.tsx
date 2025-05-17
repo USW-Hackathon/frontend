@@ -102,7 +102,14 @@ export default function Header() {
           ) : (
             <span className="text-sm font-semibold text-blue-400">
               <div>
-                <span>{userName} </span>
+                <span
+                  className="cursor-pointer hover:text-blue-300"
+                  onClick={() => {
+                    window.location.href = 'https://portal.suwon.ac.kr/enview/index.html';
+                  }}
+                >
+                  {userName}
+                </span>
                 <span>/</span>
                 <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
               </div>
@@ -169,9 +176,16 @@ export default function Header() {
                 </span>
               ) : (
                 <div>
-                  <span>{userName}</span>
+                  <span
+                    className="cursor-pointer hover:text-blue-300"
+                    onClick={() => {
+                      window.location.href = 'https://portal.suwon.ac.kr/enview/index.html';
+                    }}
+                  >
+                    {userName}
+                  </span>
                   <span>/</span>
-                <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
+                  <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
                 </div>
               )}
             </div>
