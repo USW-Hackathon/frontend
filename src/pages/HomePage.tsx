@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllNotice, getCategoryNotice, getNotice } from '../api/notice';
-import Header from '../components/Common/Header';// 헤더 컴포넌트
+import Header from '../components/Common/Header'; // 헤더 컴포넌트
 
 interface Notice {
   id: number;
@@ -77,66 +77,91 @@ const HomePage = () => {
         {/* 메인 섹션 2 */}
         <section
           ref={section2Ref}
-          className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
+          className="h-auto flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-16"
         >
-          <div className="flex flex-col w-full max-w-7xl justify-start gap-12">
-            {/* 상단: 공지 타이틀 & 카드 */}
-            <div className="flex flex-col md:flex-row items-start justify-between gap-12">
-              {/* 왼쪽 설명 */}
-              <div className="w-full md:w-1/3 text-center md:text-left">
-                <h2
-                  onClick={() => navigate('/notice')} // ✅ 클릭 시 이동
-                  className="text-3xl md:text-4xl font-bold mb-4 cursor-pointer hover:text-yellow-300 transition duration-300"
-                >
-                  공지사항
-                </h2>
-                <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                  수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.
-                </p>
+          <div className="flex flex-col w-full max-w-7xl justify-start gap-16 mt-10">
+            {/* 1. 로그인 + 공지 박스 + 카드 */}
+            <div className="flex flex-col md:flex-row gap-8">
+              {/* 로그인 */}
+              <div className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between">
+                <h2 className="text-2xl font-bold mb-6 text-center text-white">LOGIN</h2>
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    placeholder="아이디를 입력해주세요"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  />
+                </div>
+                <div className="mb-4">
+                  <input
+                    type="password"
+                    placeholder="비밀번호를 입력해주세요"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  />
+                </div>
+                <div className="flex items-center justify-between mb-4 text-sm text-white">
+                  <label className="flex items-center">
+                    <input type="checkbox" className="mr-2" /> 아이디 저장
+                  </label>
+                  <div className="flex space-x-2 text-white font-semibold">
+                    <a href="#">아이디 찾기</a>
+                    <span>|</span>
+                    <a href="#">비밀번호 찾기</a>
+                  </div>
+                </div>
+                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300">
+                  로그인
+                </button>
+                <div className="mt-4 p-3 bg-red-50 text-xs text-left text-gray-800 rounded-md border border-red-200">
+                  <p className="mb-1">
+                    <span className="font-semibold text-white">※ 아이디 :</span> 학번 또는 사번
+                  </p>
+                  <p>
+                    <span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!
+                  </p>
+                </div>
               </div>
 
-              {/* 공지 카드 */}
-              <div className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* 학부 */}
-                <div className="bg-white/15 text-white  border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
-                  <h3 className="text-xl font-bold mb-2">학부</h3>
-                  <div className="mb-2">
-                    <p className="text-base font-semibold truncate">{notice1?.title || '제목 로딩중'}</p>
-                    <p className="text-sm text-gray-400 mt-1 truncate">
-                      {notice1?.content ? notice1.content.slice(0, 40) + '...' : '내용 로딩중'}
-                    </p>
+              {/* 오른쪽 전체 박스 */}
+              <div className="flex flex-col w-full md:w-2/3">
+                <div className="flex flex-col h-full">
+                  {/* 가로로 긴 컴포넌트 */}
+                  <div className="bg-white/20 p-4 rounded-2xl text-white shadow-md h-1/3">
+                    <h2
+                      onClick={() => navigate('/notice')}
+                      className="text-white text-3xl md:text-4xl font-bold cursor-pointer hover:text-yellow-300 mb-5 transition duration-300"
+                    >
+                      공지사항
+                    </h2>
+                    <h3 className="text-xl font-bold mb-2">
+                      수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.
+                    </h3>
                   </div>
-                  <p className="text-xs">{notice1?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
-                </div>
 
-                {/* 대학원 */}
-                <div className="bg-white/15 text-white  border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
-                  <h3 className="text-xl font-bold mb-2">대학원</h3>
-                  <div className="mb-2">
-                    <p className="text-base font-semibold truncate">{notice2?.title || '제목 로딩중'}</p>
-                    <p className="text-sm text-gray-400 mt-1 truncate">
-                      {notice2?.content ? notice2.content.slice(0, 40) + '...' : '내용 로딩중'}
-                    </p>
+                  {/* 공지 카드 3개 */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-2/3 mt-6">
+                    {[notice1, notice2, notice3].map((notice, i) => (
+                      <div
+                        key={i}
+                        className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md h-full"
+                      >
+                        <h3 className="text-xl font-bold mb-2">{['학부', '대학원', '취업'][i]}</h3>
+                        <div className="mb-2">
+                          <p className="text-base font-semibold truncate">{notice?.title || '제목 로딩중'}</p>
+                          <p className="text-sm text-gray-400 mt-1 truncate">
+                            {notice?.content ? notice.content.slice(0, 40) + '...' : '내용 로딩중'}
+                          </p>
+                        </div>
+                        <p className="text-xs">{notice?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
+                      </div>
+                    ))}
                   </div>
-                  <p className="text-xs">{notice2?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
-                </div>
-
-                {/* 취업 */}
-                <div className="bg-white/15 text-white  border-gray-200 text-black p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition duration-300">
-                  <h3 className="text-xl font-bold mb-2">취업</h3>
-                  <div className="mb-2">
-                    <p className="text-base font-semibold truncate">{notice3?.title || '제목 로딩중'}</p>
-                    <p className="text-sm text-gray-400 mt-1 truncate">
-                      {notice3?.content ? notice3.content.slice(0, 40) + '...' : '내용 로딩중'}
-                    </p>
-                  </div>
-                  <p className="text-xs">{notice3?.createdAt?.split('T')[0] || '시간 로딩중'}</p>
                 </div>
               </div>
             </div>
 
-            {/* 하단: 텍스트 공지 리스트 */}
-            <div className="mt-4 w-full">
+            {/* 2. 공지 리스트 */}
+            <div className="w-full">
               <ul className="space-y-2 text-sm text-gray-200">
                 {notice.map((item, index) => (
                   <li
@@ -151,7 +176,7 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-        
+
         {/* 메인 섹션 3 */}
         <section className="h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center drop-shadow-lg">어떤 학부가 궁금하세요?</h2>
@@ -234,7 +259,7 @@ const HomePage = () => {
           {/* 영상 영역 */}
           <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 영상 1 */}
-            <div className="w-full aspect-[16/9] max-w-[480px] mx-auto">
+            <h2 className="w-full aspect-[16/9] max-w-[480px] mx-auto">
               <iframe
                 className="w-full h-full rounded-lg shadow-md"
                 src="https://www.youtube.com/embed/83RTUfy2Lt8?rel=0"
@@ -243,7 +268,7 @@ const HomePage = () => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
-            </div>
+            </h2>
 
             {/* 영상 2 */}
             <div className="w-full aspect-[16/9] max-w-[480px] mx-auto">
@@ -263,8 +288,8 @@ const HomePage = () => {
           <div
             className="absolute inset-0 bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url('https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png')`,
-              backgroundSize: 'contain',  // 또는 'cover'
+              backgroundImage: 'url(https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png)',
+              backgroundSize: 'contain', // 또는 'cover'
               backgroundPosition: 'center',
               opacity: 0.3,
             }}
@@ -274,13 +299,11 @@ const HomePage = () => {
             <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg italic mb-5">
               Intelligence Convergence University
             </h1>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg italic">
-              Suwon University
-            </h1>
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg italic">Suwon University</h1>
           </div>
         </section>
       </div>
-    </div >
+    </div>
   );
 };
 
