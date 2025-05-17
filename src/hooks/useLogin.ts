@@ -1,19 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
 import { login } from '@/api/auth/login';
-import { setCookie } from '@/utils/cookies';
 
-const useLogin = () => {
+interface UseLoginParams {
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
+}
+
+const useLogin = ({ onSuccess, onError }: UseLoginParams = {}) => {
   return useMutation({
-    mutationFn: login, 
+    mutationFn: login,
     onSuccess: (data) => {
       console.log('로그인 성공:', data.data.userName);
-      setCookie('username', data.data.userName, { path: '/', secure: true });
-      window.location.href = '/';
-      
+      onSuccess?.(data); // 외부 콜백 호출
     },
     onError: (error) => {
       console.error('로그인 실패:', error);
-      alert('아이디 혹은 비밀번호가 잘못되었습니다.');
+      onError?.(error); // 외부 콜백 호출
     },
   });
 };

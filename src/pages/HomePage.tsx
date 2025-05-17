@@ -1,11 +1,14 @@
 // src/pages/HomePage.tsx
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAllNotice, getCategoryNotice, getNotice } from '../api/notice';
-import Header from '../components/Common/Header'; // 헤더 컴포넌트
+// 헤더 컴포넌트
 import { useForm } from 'react-hook-form';
-import useLogin from '@/hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
+import useLogin from '@/hooks/useLogin';
+import { getAllNotice, getCategoryNotice, getNotice } from '../api/notice';
+import Header from '../components/Common/Header';
+import { getCookie, setCookie } from '@/utils/cookies';
+
 
 interface Notice {
   id: number;
@@ -17,6 +20,11 @@ interface Notice {
   category: number;
 }
 
+type LoginForm = {
+  memberId: string;
+  password: string;
+};
+
 const HomePage = () => {
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
@@ -26,6 +34,19 @@ const HomePage = () => {
   const [notice2, setNotice2] = useState<Notice | null>(null);
   const [notice3, setNotice3] = useState<Notice | null>(null);
   const navigate = useNavigate();
+  const loginMutation = useLogin();
+  const [username, setUsername] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>();
+
+  const onSubmit = (data: LoginForm) => {
+    console.log('로그인 시도:', data);
+    loginMutation.mutate(data);
+  };
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -46,6 +67,13 @@ const HomePage = () => {
     };
 
     fetchAll();
+  }, []);
+
+  useEffect(() => {
+    const savedUsername = getCookie('username');
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
   }, []);
 
   return (
@@ -83,65 +111,94 @@ const HomePage = () => {
           className="h-auto flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-16"
         >
           <div className="flex flex-col w-full max-w-7xl justify-start gap-16 mt-10">
-            {/* 1. 로그인 + 공지 박스 + 카드 */}
             <div className="flex flex-col md:flex-row gap-8">
-              {/* 로그인 */}
-              <div className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between">
-                <h2 className="text-2xl font-bold mb-6 text-center text-white">LOGIN</h2>
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="아이디를 입력해주세요"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                  />
+              {/* 로그인 박스 */}
+              {/* 로그인 박스 (조건부 렌더링) */}
+              {username ? (
+                <div className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-center items-center">
+                  <h2 className="text-2xl font-bold mb-4 text-white">환영합니다 👋</h2>
+                  <p className="text-lg text-white font-semibold">{username}님, 환영합니다!</p>
+                  <button
+                    className="mt-6 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
+                    onClick={() => {
+                      setUsername(null);
+                      setCookie('username', '', { path: '/', maxAge: 0 }); // 로그아웃 처리
+                    }}
+                  >
+                    로그아웃
+                  </button>
                 </div>
-                <div className="mb-4">
-                  <input
-                    type="password"
-                    placeholder="비밀번호를 입력해주세요"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                  />
-                </div>
-                <div className="flex items-center justify-between mb-4 text-sm text-white">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" /> 아이디 저장
-                  </label>
-                  <div className="flex space-x-2 text-white font-semibold">
-                    <a href="#">아이디 찾기</a>
-                    <span>|</span>
-                    <a href="#">비밀번호 찾기</a>
-                  </div>
-                </div>
-                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300">
-                  로그인
-                </button>
-                <div className="mt-4 p-3 bg-red-50 text-xs text-left text-gray-800 rounded-md border border-red-200">
-                  <p className="mb-1">
-                    <span className="font-semibold text-white">※ 아이디 :</span> 학번 또는 사번
-                  </p>
-                  <p>
-                    <span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!
-                  </p>
-                </div>
-              </div>
+              ) : (
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between"
+                >
+                  <h2 className="text-2xl font-bold mb-6 text-center text-white">LOGIN</h2>
 
-              {/* 오른쪽 전체 박스 */}
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      placeholder="아이디를 입력해주세요"
+                      {...register('memberId', { required: '아이디를 입력해주세요' })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                    {errors.memberId && <p className="text-red-500 text-sm mt-1">{errors.memberId.message}</p>}
+                  </div>
+
+                  <div className="mb-4">
+                    <input
+                      type="password"
+                      placeholder="비밀번호를 입력해주세요"
+                      {...register('password', { required: '비밀번호를 입력해주세요' })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+                  </div>
+
+                  <div className="flex items-center justify-between mb-4 text-sm text-white">
+                    <label className="flex items-center">
+                      <input type="checkbox" className="mr-2" /> 아이디 저장
+                    </label>
+                    <div className="flex space-x-2 font-semibold">
+                      <a href="#">아이디 찾기</a>
+                      <span>|</span>
+                      <a href="#">비밀번호 찾기</a>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300"
+                  >
+                    로그인
+                  </button>
+
+                  <div className="mt-4 p-3 bg-red-50 text-xs text-left text-gray-800 rounded-md border border-red-200">
+                    <p className="mb-1">
+                      <span className="font-semibold text-red-600">※ 아이디 :</span> 학번 또는 사번
+                    </p>
+                    <p>
+                      <span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!
+                    </p>
+                  </div>
+                </form>
+              )}
+
+              {/* 공지사항 우측 영역 */}
               <div className="flex flex-col w-full md:w-2/3">
                 <div className="flex flex-col h-full">
-                  {/* 가로로 긴 컴포넌트 */}
-                  <div className="bg-white/20 p-4 rounded-2xl text-white shadow-md h-1/3">
+                  <div className="bg-white/0 p-4 rounded-2xl text-white shadow-null h-1/3">
                     <h2
                       onClick={() => navigate('/notice')}
-                      className="text-white text-3xl md:text-4xl font-bold cursor-pointer hover:text-yellow-300 mb-5 transition duration-300"
+                      className="text-white text-3xl md:text-4xl font-bold cursor-pointer hover:text-blue-400 mb-5 transition duration-300"
                     >
                       공지사항
                     </h2>
                     <h3 className="text-xl font-bold mb-2">
-                      수원대학교 지능형SW융합대학의 최신 소식을 한눈에 확인하세요.
+                      수원대학교 지능형 SW 융합대학의 최신 소식을 한 눈에 확인하세요.
                     </h3>
                   </div>
 
-                  {/* 공지 카드 3개 */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-2/3 mt-6">
                     {[notice1, notice2, notice3].map((notice, i) => (
                       <div
@@ -163,7 +220,7 @@ const HomePage = () => {
               </div>
             </div>
 
-            {/* 2. 공지 리스트 */}
+            {/* 공지 리스트 */}
             <div className="w-full">
               <ul className="space-y-2 text-sm text-gray-200">
                 {notice.map((item, index) => (
@@ -184,8 +241,8 @@ const HomePage = () => {
         <section className="h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center drop-shadow-lg">어떤 학부가 궁금하세요?</h2>
           <p className="text-gray-300 text-center mb-12 max-w-2xl drop-shadow-md">
-            수원대학교 지능형SW융합대학은 다양한 학부와 전공을 통해 실무 중심의 교육을 제공합니다. 원하는 학부를 선택해
-            자세한 정보를 확인해보세요.
+            수원대학교 지능형 SW 융합대학은 다양한 학부와 전공을 통해 실무 중심의 교육을 제공합니다. 원하는 학부를
+            선택해 자세한 정보를 확인해보세요.
           </p>
 
           {/* 카드 컨테이너 */}
@@ -200,11 +257,11 @@ const HomePage = () => {
                 key={idx}
                 href={dept.link}
                 className="rounded-2xl p-6 h-40 flex flex-col justify-center items-center
-                   bg-white text-black border border-gray-200 shadow-md
-                   transition duration-300 hover:shadow-lg hover:-translate-y-1"
+                  bg-white/10 text-white border border-white/0 shadow-md
+                  transition duration-300 hover:shadow-lg hover:-translate-y-1"
               >
                 <h3 className="text-xl font-bold mb-2">{dept.title}</h3>
-                <p className="text-sm text-gray-600">자세히 보기 →</p>
+                <p className="text-sm text-whith">자세히 보기 →</p>
               </a>
             ))}
           </div>
@@ -216,7 +273,7 @@ const HomePage = () => {
           className="h-auto min-h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-20"
         >
           {/* 🎓 입학정보 타이틀 */}
-          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">🎓 입학정보</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">입학정보</h2>
 
           {/* 카드 영역 */}
           <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
@@ -257,7 +314,9 @@ const HomePage = () => {
           </div>
 
           {/* 🎥 USW VIDEO 타이틀 */}
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">🎥 USW VIDEO</h2>
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 text-center">USW VIDEO</h2>
+          <br />
+          <br />
 
           {/* 영상 영역 */}
           <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -307,7 +366,7 @@ const HomePage = () => {
         </section>
       </div>
       <section className="h-auto snap-start">
-      <Footer />
+        <Footer />
       </section>
     </div>
   );
