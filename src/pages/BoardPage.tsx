@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getAllBoardPost } from '../api/boardPost';
 import Header from '../components/Common/Header';
 
@@ -23,42 +23,39 @@ const categories = [
 
 const BoardPage = () => {
   const [posts, setPosts] = useState<BoardPost[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const size = 10;
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { categoryId = '0' } = useParams();
+  const page = Number(searchParams.get('page') || 1);
+  const size = 10;
 
   const fetchBoardPosts = async () => {
-  try {
-    const query: any = { page, size };
+    try {
+      const query: any = { page, size };
+      if (categoryId !== '0') {
+        query.categoryId = Number(categoryId);
+      }
 
-    if (selectedCategory !== 'all') {
-      query.categoryId = Number(selectedCategory);
+      const res = await getAllBoardPost(query);
+      setPosts(res.data.boardPostList);
+      setTotalPages(res.data.totalPages ?? 1);
+    } catch (e) {
+      console.error('게시글 불러오기 실패:', e);
     }
-
-    const res = await getAllBoardPost(query);
-
-    setPosts(res.data.boardPostList);
-    setTotalPages(res.data.totalPages ?? 1);
-  } catch (e) {
-    console.error('게시글 불러오기 실패:', e);
-  }
-};
-
-
+  };
 
   useEffect(() => {
     fetchBoardPosts();
     window.scrollTo({ top: 300, behavior: 'smooth' });
-  }, [selectedCategory, page]);
+  }, [categoryId, page]);
 
-  const handlePrev = () => {
-    if (page > 1) setPage(prev => prev - 1);
+  const handleCategoryChange = (value: string) => {
+    navigate(`/board/${value}?page=1`);
   };
 
-  const handleNext = () => {
-    if (page < totalPages) setPage(prev => prev + 1);
+  const handlePageChange = (newPage: number) => {
+    navigate(`/board/${categoryId}?page=${newPage}`);
   };
 
   return (
@@ -96,12 +93,9 @@ const BoardPage = () => {
             {categories.map(cat => (
               <button
                 key={cat.value}
-                onClick={() => {
-                  setSelectedCategory(cat.value);
-                  setPage(1);
-                }}
+                onClick={() => handleCategoryChange(cat.value)}
                 className={`px-4 py-2 text-sm font-semibold rounded-t-md transition ${
-                  selectedCategory === cat.value
+                  categoryId === cat.value
                     ? 'bg-black text-white border-l border-t border-r border-black'
                     : 'text-black hover:text-gray-500'
                 }`}
@@ -142,7 +136,7 @@ const BoardPage = () => {
         {/* 페이지네이션 */}
         <div className="flex justify-center gap-2 pb-12">
           <button
-            onClick={handlePrev}
+            onClick={() => handlePageChange(page - 1)}
             disabled={page === 1}
             className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-30"
           >
@@ -151,7 +145,7 @@ const BoardPage = () => {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
             <button
               key={p}
-              onClick={() => setPage(p)}
+              onClick={() => handlePageChange(p)}
               className={`px-3 py-1 rounded ${
                 page === p ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'
               }`}
@@ -160,7 +154,7 @@ const BoardPage = () => {
             </button>
           ))}
           <button
-            onClick={handleNext}
+            onClick={() => handlePageChange(page + 1)}
             disabled={page === totalPages}
             className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-30"
           >
@@ -169,6 +163,7 @@ const BoardPage = () => {
         </div>
       </div>
 
+      {/* marquee 애니메이션 */}
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }

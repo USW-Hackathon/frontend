@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
 
@@ -21,19 +21,20 @@ const categories = [
 ];
 
 const NoticePage = () => {
+  const { category = 'all' } = useParams();
+  const navigate = useNavigate();
+
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const navigate = useNavigate();
   const size = 10;
 
   const fetchNotices = async () => {
     try {
       const res =
-        selectedCategory === 'all'
+        category === 'all'
           ? await getAllNotice({ page, size })
-          : await getCategoryNotice({ page, size, category: Number(selectedCategory) });
+          : await getCategoryNotice({ page, size, category: Number(category) });
 
       setNotices(res.data.content);
       setTotalPages(res.data.totalPages || 1);
@@ -44,8 +45,17 @@ const NoticePage = () => {
 
   useEffect(() => {
     fetchNotices();
+    setPage(1);
     window.scrollTo({ top: 300, behavior: 'smooth' });
-  }, [selectedCategory, page]);
+  }, [category]);
+
+  useEffect(() => {
+    fetchNotices();
+  }, [page]);
+
+  const handleCategoryClick = (value: string) => {
+    navigate(`/notice/${value}`);
+  };
 
   const handlePrev = () => {
     if (page > 1) setPage(prev => prev - 1);
@@ -94,15 +104,11 @@ const NoticePage = () => {
             {categories.map(cat => (
               <button
                 key={cat.value}
-                onClick={() => {
-                  setSelectedCategory(cat.value);
-                  setPage(1); // 카테고리 변경 시 1페이지로 초기화
-                }}
+                onClick={() => handleCategoryClick(cat.value)}
                 className={`px-4 py-2 text-sm font-semibold rounded-t-md transition
-                  ${
-                    selectedCategory === cat.value
-                      ? 'bg-black text-white border-l border-t border-r border-black'
-                      : 'text-black hover:text-gray-500'
+                  ${category === cat.value
+                    ? 'bg-black text-white border-l border-t border-r border-black'
+                    : 'text-black hover:text-gray-500'
                   }`}
               >
                 {cat.label}
@@ -117,7 +123,7 @@ const NoticePage = () => {
             {notices.map(notice => (
               <li
                 key={notice.id}
-                onClick={() => navigate(`/notice/${notice.id}`)}
+                onClick={() => navigate(`/notice-detail/${notice.id}`)}
                 className="cursor-pointer py-6 hover:bg-gray-100 transition rounded-md px-4"
               >
                 <h2 className="text-xl font-semibold mb-1">{notice.title}</h2>

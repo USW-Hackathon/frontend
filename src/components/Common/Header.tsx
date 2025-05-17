@@ -5,52 +5,62 @@ import { useNavigate } from 'react-router-dom';
 import { getCookie } from '@/utils/cookies';
 import { logout } from '@/api/auth/logout';
 
-
 const handleLogout = async () => {
-  await logout(); // 쿠키 삭제 및 서버 요청
-  window.location.reload(); // 상태 반영을 위해 새로고침
+  await logout();
+  window.location.reload();
 };
 
-// 네비게이션 메뉴 목록
 const menus = [
   {
     label: '대학안내',
-    children: ['비전', '교수진', '찾아오시는 길'],
+    children: [
+      { name: '비전', path: '/about/vision' },
+      { name: '교수진', path: '/about/faculty' },
+      { name: '찾아오시는 길', path: '/about/location' },
+    ],
   },
   {
     label: '학과/학부',
-    children: ['컴퓨터학부', '정보통신학부', '데이터과학부', '클라우드융복합'],
+    children: [
+      { name: '컴퓨터학부', path: '/departments/computer' },
+      { name: '정보통신학부', path: '/departments/ict' },
+      { name: '데이터과학부', path: '/departments/datascience' },
+      { name: '클라우드융복합', path: '/departments/cloud' },
+    ],
   },
   {
     label: '공지사항',
-    children: ['학부', '대학원', '취업'],
+    children: [
+      { name: '학부', path: '/notice/2' },
+      { name: '대학원', path: '/notice/3' },
+      { name: '취업', path: '/notice/1' },
+    ],
   },
   {
     label: '게시판',
-    children: ['뉴스', '학생이야기', '졸업작품'],
+    children: [
+      { name: '뉴스', path: '/board/1' },
+      { name: '학생이야기', path: '/board/2' },
+      { name: '졸업작품', path: '/board/3' },
+    ],
   },
 ];
 
 export default function Header() {
-  // 쿠키 기반 로그인 정보
   const isLogin = getCookie('token');
   const userName = getCookie('username');
-
-  // 상태 관리
-  const [isHovering, setIsHovering] = useState(false);           // 상단바 hover 시 하위 메뉴 표시
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);   // 모바일 메뉴 열림 여부
-  const [isHidden, setIsHidden] = useState(false);               // 스크롤 시 상단바 숨김 여부
-  const [lastScrollY, setLastScrollY] = useState(0);             // 마지막 스크롤 위치
+  const [isHovering, setIsHovering] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
 
-  // 스크롤 방향 감지 → 상단바 숨김 처리
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
-      setIsHidden(currentY > lastScrollY && currentY > 50); // 아래로 스크롤 중이면 숨김
+      setIsHidden(currentY > lastScrollY && currentY > 50);
       setLastScrollY(currentY);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
@@ -64,7 +74,7 @@ export default function Header() {
     >
       {/* 데스크탑 상단바 */}
       <div className="hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full items-center px-6 py-3 bg-[#0d0d1a]">
-        {/* 로고 및 타이틀 */}
+        {/* 로고 */}
         <div className="flex items-center h-[48px] gap-3 z-10 relative">
           <img
             src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
@@ -81,7 +91,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 메뉴 리스트 */}
+        {/* 메뉴 */}
         {menus.map((menu, index) => (
           <div key={index} className="text-center">
             <div className="text-lg font-semibold text-white hover:text-blue-300 cursor-pointer">
@@ -90,13 +100,10 @@ export default function Header() {
           </div>
         ))}
 
-        {/* 로그인 / 사용자명 */}
+        {/* 로그인/로그아웃 */}
         <div className="text-right pr-2">
           {!isLogin ? (
-            <span
-              onClick={() => navigate('/login')}
-              className="text-sm font-semibold text-blue-700 hover:underline cursor-pointer"
-            >
+            <span onClick={() => navigate('/login')} className="text-sm font-semibold text-blue-700 hover:underline cursor-pointer">
               로그인
             </span>
           ) : (
@@ -104,9 +111,7 @@ export default function Header() {
               <div>
                 <span
                   className="cursor-pointer hover:text-blue-300"
-                  onClick={() => {
-                    window.location.href = 'https://portal.suwon.ac.kr/enview/index.html';
-                  }}
+                  onClick={() => window.location.href = 'https://portal.suwon.ac.kr/enview/index.html'}
                 >
                   {userName}
                 </span>
@@ -116,6 +121,28 @@ export default function Header() {
             </span>
           )}
         </div>
+      </div>
+
+      {/* 데스크탑 하위 메뉴 */}
+      <div
+        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
+          }`}
+      >
+        <div></div>
+        {menus.map((menu, index) => (
+          <div key={index} className="text-center py-5 space-y-2 text-sm text-white/80">
+            {menu.children.map((item, idx) => (
+              <div
+                key={idx}
+                className="hover:text-blue-400 cursor-pointer whitespace-nowrap"
+                onClick={() => navigate(item.path)}
+              >
+                {item.name}
+              </div>
+            ))}
+          </div>
+        ))}
+        <div></div>
       </div>
 
       {/* 모바일 상단바 */}
@@ -128,31 +155,12 @@ export default function Header() {
           />
           <span className="text-lg font-bold text-white whitespace-nowrap">지능형SW융합대학</span>
         </div>
-        {/* 모바일 메뉴 토글 버튼 */}
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           <Menu className="w-6 h-6 text-white" />
         </button>
       </div>
 
-      {/* 데스크탑 하위 메뉴 (hover 시 확장) */}
-      <div
-        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
-          }`}
-      >
-        <div></div>
-        {menus.map((menu, index) => (
-          <div key={index} className="text-center py-5 space-y-2 text-sm text-white/80">
-            {menu.children.map((item, idx) => (
-              <div key={idx} className="hover:text-blue-400 cursor-pointer whitespace-nowrap">
-                {item}
-              </div>
-            ))}
-          </div>
-        ))}
-        <div></div>
-      </div>
-
-      {/* 모바일 메뉴 (슬라이드 방식) */}
+      {/* 모바일 메뉴 */}
       {mobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-[#1a2238] border-t border-gray-200 z-40">
           <div className="p-4 space-y-4 text-white">
@@ -161,14 +169,17 @@ export default function Header() {
                 <div className="font-semibold mb-2">{menu.label}</div>
                 <div className="flex flex-col space-y-1 pl-4">
                   {menu.children.map((child, idx) => (
-                    <span key={idx} className="text-sm hover:text-blue-300 cursor-pointer">
-                      {child}
+                    <span
+                      key={idx}
+                      className="text-sm hover:text-blue-300 cursor-pointer"
+                      onClick={() => navigate(child.path)}
+                    >
+                      {child.name}
                     </span>
                   ))}
                 </div>
               </div>
             ))}
-            {/* 모바일 로그인/사용자 표시 */}
             <div className="pt-4 border-t text-sm font-semibold text-right">
               {!isLogin ? (
                 <span onClick={() => navigate('/login')} className="cursor-pointer hover:text-blue-300">
@@ -178,9 +189,7 @@ export default function Header() {
                 <div>
                   <span
                     className="cursor-pointer hover:text-blue-300"
-                    onClick={() => {
-                      window.location.href = 'https://portal.suwon.ac.kr/enview/index.html';
-                    }}
+                    onClick={() => window.location.href = 'https://portal.suwon.ac.kr/enview/index.html'}
                   >
                     {userName}
                   </span>
