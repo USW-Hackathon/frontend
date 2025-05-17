@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
 import SubHeader from '../components/SubHeader';
+import MarqueeBanner from '@/components/MarqueeBanner';
+ 
 
 interface Professor {
   id: number;
@@ -82,19 +84,7 @@ const ProfessorPage = () => {
       </div>
 
       {/* 마퀴 배너 */}
-      <div className="bg-[#148cb1] overflow-hidden whitespace-nowrap h-20 flex items-center">
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          <span className="text-4xl font-extrabold text-black pr-20">
-            COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.
-          </span>
-          <span className="text-4xl font-extrabold text-black pr-20">
-            COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.
-          </span>
-          <span className="text-4xl font-extrabold text-black pr-20">
-            COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.
-          </span>
-        </div>
-      </div>
+      <MarqueeBanner />
       <SubHeader />
 
 
@@ -145,17 +135,6 @@ const ProfessorPage = () => {
         </div>
       </div>
 
-      {/* marquee 애니메이션 스타일 */}
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 150s linear infinite;
-          
-        }
-      `}</style>
     </div>
   );
 };

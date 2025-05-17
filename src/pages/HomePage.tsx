@@ -327,7 +327,7 @@ const HomePage = () => {
           </div>
         </section>
       </div>
-      <section className="h-auto snap-start">
+      <section className="h-auto snap-start w-full">
         <Footer />
       </section>
     </div>

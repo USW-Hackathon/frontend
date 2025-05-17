@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import Header from '../components/Common/Header';
 import SubHeader from '../components/SubHeader';
+import MarqueeBanner from '@/components/MarqueeBanner';
 
 declare global {
   interface Window {
@@ -156,15 +157,7 @@ const Location = () => {
         </div>
       </div>
 
-      <div className="w-full bg-[#148cb1] overflow-hidden h-20 flex items-center">
-        <div className="flex animate-marquee whitespace-nowrap min-w-full">
-          {Array(4).fill(null).map((_, i) => (
-            <span key={i} className="text-4xl font-extrabold text-black px-20">
-              COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.
-            </span>
-          ))}
-        </div>
-      </div>
+      <MarqueeBanner />
       <SubHeader />
 
       <div className="w-full bg-white text-black">
@@ -178,119 +171,109 @@ const Location = () => {
             ref={mapRef}
           />
 
-<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-  <a
-    href="https://www.suwon.ac.kr/index.html?menuno=674&bbsno=87280&boardno=667&siteno=37&act=view"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center flex items-center justify-center"
-  >
-    통학버스 안내
-  </a>
-  <a
-    href="https://www.suwon.ac.kr/index.html?menuno=656"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center flex items-center justify-center"
-  >
-   대중버스 안내
-  </a>
-  <a
-    href="https://map.naver.com/p/directions/-/14134807.9282046,4468405.2235878,%EC%88%98%EC%9B%90%EB%8C%80%ED%95%99%EA%B5%90IT%EB%8C%80%ED%95%99,31631663,PLACE_POI/-/transit?c=15.00,0,0,0,dh"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center flex items-center justify-center"
-  >
-    오시는 길 상세
-  </a>
-</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a
+              href="https://www.suwon.ac.kr/index.html?menuno=674&bbsno=87280&boardno=667&siteno=37&act=view"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center flex items-center justify-center"
+            >
+              통학버스 안내
+            </a>
+            <a
+              href="https://www.suwon.ac.kr/index.html?menuno=656"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center flex items-center justify-center"
+            >
+              대중버스 안내
+            </a>
+            <a
+              href="https://map.naver.com/p/directions/-/14134807.9282046,4468405.2235878,%EC%88%98%EC%9B%90%EB%8C%80%ED%95%99%EA%B5%90IT%EB%8C%80%ED%95%99,31631663,PLACE_POI/-/transit?c=15.00,0,0,0,dh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition text-center flex items-center justify-center"
+            >
+              오시는 길 상세
+            </a>
+          </div>
 
         </div>
       </div>
       {/* 캠퍼스 안내 및 연락처 */}
-<div className="w-full bg-white text-black border-t border-gray-200">
-  <div className="max-w-5xl mx-auto px-4 py-12 space-y-12">
-    
-    {/* 주소 및 연락처 */}
-    <div className="flex items-start gap-4">
-      <div className="text-blue-500 text-3xl">
-        <img src="https://cdn-icons-png.flaticon.com/128/684/684908.png" alt="주소 아이콘" className="w-8 h-8 mt-1" />
+      <div className="w-full bg-white text-black border-t border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 py-12 space-y-12">
+
+          {/* 주소 및 연락처 */}
+          <div className="flex items-start gap-4">
+            <div className="text-blue-500 text-3xl">
+              <img src="https://cdn-icons-png.flaticon.com/128/684/684908.png" alt="주소 아이콘" className="w-8 h-8 mt-1" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-2">주소 및 연락처</h3>
+              <p className="text-sm leading-relaxed text-gray-700">
+                경기 화성시 봉담읍 와우안길 17 수원대학교 지능형 SW 융합대학<br />
+                연락처 : 031-229-8352
+              </p>
+            </div>
+          </div>
+          {/* 승용차 이용 시 안내 */}
+          <div className="mt-12 space-y-8">
+            <h3 className="text-xl font-bold text-black flex items-center gap-2">
+              <img src="https://cdn-icons-png.flaticon.com/128/854/854878.png" alt="승용차 아이콘" className="w-6 h-6" />
+              승용차 이용 시
+            </h3>
+
+            <div className="space-y-6 text-sm leading-relaxed text-gray-700">
+              <div>
+                <p className="font-semibold text-blue-800">● 수원역 → 오산방면 → 세평지하차도진입 → 우회전 → 오목천삼거리 좌회전 → 한국농업전문학교 → 수원대학교</p>
+              </div>
+              <br />
+              <div>
+                <p className="font-bold">· A코스 (의왕·과천고속도로 이용)</p>
+                <p>사당동 → 봉담IC → 남수원방면 → 한국농업전문학교 → 수원대학교</p>
+              </div>
+              <div>
+                <p className="font-bold">· B코스 (경부고속도로 이용)</p>
+                <p>수원IC → 터미널사거리 → 병점육교 → 융건릉 → 수원대학교</p>
+              </div>
+              <div>
+                <p className="font-bold">· C코스 (경부고속도로 이용)</p>
+                <p>동탄JC → 정남IC → 수원과학대 → 수원대학교</p>
+              </div>
+              <div>
+                <p className="font-bold">· D코스 (1번국도 이용)</p>
+                <p>영등포 → 안양 → 의왕 → 북수원I.C(봉담,발안방면) → 봉담I.C(좌회전) → 수영사거리 → 한국농업전문학교 → 수원대학교</p>
+              </div>
+              <br /><br />
+              <div>
+                <p className="font-bold">· A코스</p>
+                <p>분당(이매사거리) → 판교IC → 판교JC(서울외곽순환도로 일산방면) → 청계톨게이트통과 → 학의분기점 → 과천.봉담간 고속화도로 봉담방면 → 봉담IC → 한국농업전문학교 → 수원대학교</p>
+              </div>
+              <div>
+                <p className="font-bold">· B코스</p>
+                <p>풍덕천 → 수원동문(창용문) → 수원남문(팔달문) → 수원역 → 수원대학교</p>
+              </div>
+              <br /><br />
+              <div>
+                <p className="font-bold">· A코스</p>
+                <p>동암역 → 만수동 → 서해안고속도로 → 비봉IC → 수원방면 → 오목천삼거리(우회전) → 한국농업전문학교 → 수원대학교</p>
+              </div>
+              <div>
+                <p className="font-bold">· B코스</p>
+                <p>동암역 → 만수동 → 신갈.안산고속도로 → 반월IC(군포.산본) → 수인산업도로(수원방면) → 서수원I.C → 봉담IC(예상시간 50분) → 한국농업전문학교 → 수원대학교</p>
+              </div>
+              <div>
+                <p className="font-bold">· C코스</p>
+                <p>동암역 → 만수동 → 수인산업도로 → 서수원I.C → 봉담IC → 한국농업전문학교 → 수원대학교 (예상시간 55분)</p>
+              </div>
+              <br />  <br />
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div>
-        <h3 className="text-xl font-bold mb-2">주소 및 연락처</h3>
-        <p className="text-sm leading-relaxed text-gray-700">
-          경기 화성시 봉담읍 와우안길 17 수원대학교 지능형 SW 융합대학<br />
-          연락처 : 031-229-8352
-        </p>
-      </div>
-    </div>
-        {/* 승용차 이용 시 안내 */}
-<div className="mt-12 space-y-8">
-  <h3 className="text-xl font-bold text-black flex items-center gap-2">
-    <img src="https://cdn-icons-png.flaticon.com/128/854/854878.png" alt="승용차 아이콘" className="w-6 h-6" />
-    승용차 이용 시
-  </h3>
 
-  <div className="space-y-6 text-sm leading-relaxed text-gray-700">
-    <div>
-      <p className="font-semibold text-blue-800">● 수원역 → 오산방면 → 세평지하차도진입 → 우회전 → 오목천삼거리 좌회전 → 한국농업전문학교 → 수원대학교</p>
-    </div>
-<br />
-    <div>
-      <p className="font-bold">· A코스 (의왕·과천고속도로 이용)</p>
-      <p>사당동 → 봉담IC → 남수원방면 → 한국농업전문학교 → 수원대학교</p>
-    </div>
-    <div>
-      <p className="font-bold">· B코스 (경부고속도로 이용)</p>
-      <p>수원IC → 터미널사거리 → 병점육교 → 융건릉 → 수원대학교</p>
-    </div>
-    <div>
-      <p className="font-bold">· C코스 (경부고속도로 이용)</p>
-      <p>동탄JC → 정남IC → 수원과학대 → 수원대학교</p>
-    </div>
-    <div>
-      <p className="font-bold">· D코스 (1번국도 이용)</p>
-      <p>영등포 → 안양 → 의왕 → 북수원I.C(봉담,발안방면) → 봉담I.C(좌회전) → 수영사거리 → 한국농업전문학교 → 수원대학교</p>
-    </div>
-<br /><br />
-    <div>
-      <p className="font-bold">· A코스</p>
-      <p>분당(이매사거리) → 판교IC → 판교JC(서울외곽순환도로 일산방면) → 청계톨게이트통과 → 학의분기점 → 과천.봉담간 고속화도로 봉담방면 → 봉담IC → 한국농업전문학교 → 수원대학교</p>
-    </div>
-    <div>
-      <p className="font-bold">· B코스</p>
-      <p>풍덕천 → 수원동문(창용문) → 수원남문(팔달문) → 수원역 → 수원대학교</p>
-    </div>
-<br /><br />
-    <div>
-      <p className="font-bold">· A코스</p>
-      <p>동암역 → 만수동 → 서해안고속도로 → 비봉IC → 수원방면 → 오목천삼거리(우회전) → 한국농업전문학교 → 수원대학교</p>
-    </div>
-    <div>
-      <p className="font-bold">· B코스</p>
-      <p>동암역 → 만수동 → 신갈.안산고속도로 → 반월IC(군포.산본) → 수인산업도로(수원방면) → 서수원I.C → 봉담IC(예상시간 50분) → 한국농업전문학교 → 수원대학교</p>
-    </div>
-    <div>
-      <p className="font-bold">· C코스</p>
-      <p>동암역 → 만수동 → 수인산업도로 → 서수원I.C → 봉담IC → 한국농업전문학교 → 수원대학교 (예상시간 55분)</p>
-    </div>
-    <br />  <br />
-  </div>
-</div>
-
-  </div>
-</div>
-
-
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };
