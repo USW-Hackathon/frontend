@@ -13,7 +13,6 @@ import infot from '@/assets/infot.png';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
 import MarqueeBanner from '@/components/MarqueeBanner';
-import Footer from '@/components/Footer';
 
 interface College {
   id: number;
@@ -58,50 +57,83 @@ const majorImages: Record<string, { src: string; label: string }> = {
   cloud: { src: infot, label: '클라우드융복합' },
 };
 
+const floorImages: Record<string, string> = {
+  '1F': ict1F,
+  '2F': ict2F,
+  '3F': ict3F,
+  '4F': ict4F,
+  '5F': ict5F,
+};
+
 const tabs = ['소개', '교육과정', '교과목안내', '시설 안내'];
 
 const CollegeMajorPage = () => {
   const location = useLocation();
-  const [selectedCollegeId] = useState('1');
-  const [college, setCollege] = useState<College | null>(null);
+  const [majorId, setMajorId] = useState<number | null>(null);
   const [selectedMajor, setSelectedMajor] = useState<MajorDetail | null>(null);
+  const [college, setCollege] = useState<College | null>(null);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; label: string } | null>(null);
   const [activeTab, setActiveTab] = useState('소개');
   const [floorTab, setFloorTab] = useState('1F');
   const [selectedGrade, setSelectedGrade] = useState<number>(1);
   const [courseList, setCourseList] = useState<Course[]>([]);
-  const [selectedImage, setSelectedImage] = useState<{ src: string; label: string } | null>(null);
+  const selectedCollegeId = '1';
 
-  const floorImages: Record<string, string> = {
-    '1F': ict1F,
-    '2F': ict2F,
-    '3F': ict3F,
-    '4F': ict4F,
-    '5F': ict5F,
-  };
+  useEffect(() => {
+    const alias = location.pathname.split('/').pop() || '';
+    const image = majorImages[alias];
+    setSelectedImage(image ?? null);
 
-  const fetchCollegeData = async (id: string) => {
-    try {
-      const res = await axios.get(`http://223.195.111.30:5062/college/${id}`);
-      setCollege(res.data);
-      setSelectedMajor(null);
-    } catch (err) {
-      console.error('학부 정보 불러오기 실패:', err);
+    const fetchMajorInfo = async () => {
+      try {
+        const res = await axios.get(`http://223.195.111.30:5062/major/${alias}`);
+        if (res.data?.id) {
+          setMajorId(res.data.id);
+          fetchMajorDetail(res.data.id);
+        } else {
+          console.warn('majorId를 찾을 수 없습니다:', alias);
+        }
+      } catch (err) {
+        console.error('majorId 조회 실패:', err);
+      }
+    };
+
+    fetchMajorInfo();
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const fetchCollegeData = async () => {
+      try {
+        const res = await axios.get(`http://223.195.111.30:5062/college/${selectedCollegeId}`);
+        setCollege(res.data);
+      } catch (err) {
+        console.error('학부 정보 불러오기 실패:', err);
+      }
+    };
+
+    fetchCollegeData();
+  }, [selectedCollegeId]);
+
+  useEffect(() => {
+    if (activeTab === '교육과정' && majorId !== null) {
+      fetchCourses(majorId, selectedGrade);
     }
-  };
+  }, [activeTab, selectedGrade, majorId]);
 
-  const fetchMajorDetail = async (majorId: number) => {
+  const fetchMajorDetail = async (id: number) => {
     try {
-      const res = await axios.get(`http://223.195.111.30:5062/major/${majorId}`);
+      const res = await axios.get(`http://223.195.111.30:5062/major/${id}`);
+      console.log('전공 정보:', res.data);
       setSelectedMajor(res.data);
     } catch (err) {
       console.error('전공 정보 불러오기 실패:', err);
     }
   };
 
-  const fetchCourses = async (grade: number) => {
+  const fetchCourses = async (id: number, grade: number) => {
     try {
       const res = await axios.get(`http://223.195.111.30:5062/course`, {
-        params: { majorId: selectedCollegeId, grade },
+        params: { majorId: id, grade },
       });
       setCourseList(res.data.courses);
     } catch (err) {
@@ -109,53 +141,12 @@ const CollegeMajorPage = () => {
     }
   };
 
-  useEffect(() => {
-    const path = location.pathname;
-    const lastSegment = path.substring(path.lastIndexOf('/') + 1);
-
-    if (majorImages[lastSegment]) {
-      setSelectedImage(majorImages[lastSegment]);
-    } else {
-      setSelectedImage(null);
-    }
-
-    const fetchMajorIdByAlias = async () => {
-      try {
-        const res = await axios.get(`http://223.195.111.30:5062/major/${lastSegment}`);
-        const majorId = res.data?.id;
-        if (majorId) {
-          fetchMajorDetail(majorId);
-        } else {
-          console.warn('해당 별칭의 majorId를 찾을 수 없습니다:', lastSegment);
-        }
-      } catch (error) {
-        console.error('majorId 조회 실패:', error);
-      }
-    };
-
-    fetchMajorIdByAlias();
-  }, [location.pathname]);
-
-  useEffect(() => {
-    fetchCollegeData(selectedCollegeId);
-  }, [selectedCollegeId]);
-
-  useEffect(() => {
-    if (activeTab === '교육과정') {
-      fetchCourses(selectedGrade);
-    }
-  }, [selectedGrade, activeTab]);
-
   return (
     <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
       <Header />
       <div className="relative h-[480px] bg-[#0d0d1a] overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-end pr-12">
-          <img
-            src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
-            alt="USW 배경 로고"
-            className="w-[600px] opacity-10 object-contain"
-          />
+          <img src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png" alt="USW 배경 로고" className="w-[600px] opacity-10 object-contain" />
         </div>
         <div className="relative z-10 text-center pt-60">
           <h1 className="text-5xl font-extrabold">학과/학부</h1>
@@ -163,6 +154,7 @@ const CollegeMajorPage = () => {
       </div>
       <MarqueeBanner />
       <SubHeader />
+
       <div className="w-full bg-white text-black">
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="flex space-x-4 border-b mb-6">
@@ -177,16 +169,11 @@ const CollegeMajorPage = () => {
             ))}
           </div>
 
-          {/* 소개 탭 */}
           {activeTab === '소개' && selectedMajor && (
             <div className="bg-white text-black p-6 rounded-xl shadow space-y-6">
               <h2 className="text-3xl font-bold text-blue-700">{selectedMajor.name} 전공 소개</h2>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">전공 개요</h3>
-                <p className="whitespace-pre-wrap text-gray-800">{selectedMajor.introduction}</p>
-              </section>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">학과 위치 및 연락처</h3>
+              <section><h3 className="text-xl font-semibold mb-2">전공 개요</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.introduction}</p></section>
+              <section><h3 className="text-xl font-semibold mb-2">학과 위치 및 연락처</h3>
                 <ul className="text-gray-700 space-y-1">
                   <li><strong>위치:</strong> {selectedMajor.location}</li>
                   <li><strong>전화:</strong> {selectedMajor.phone}</li>
@@ -194,33 +181,19 @@ const CollegeMajorPage = () => {
                   <li><strong>근무시간:</strong> {selectedMajor.officeHours}</li>
                 </ul>
               </section>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">연구소 및 연구 프로젝트</h3>
-                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.researchCenter}</p>
-              </section>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">진로 및 자격증</h3>
+              <section><h3 className="text-xl font-semibold mb-2">연구소 및 연구 프로젝트</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.researchCenter}</p></section>
+              <section><h3 className="text-xl font-semibold mb-2">진로 및 자격증</h3>
                 <ul className="text-gray-800 list-disc pl-6">
                   <li><strong>진로:</strong> {selectedMajor.career}</li>
                   <li><strong>자격증:</strong> {selectedMajor.certifications}</li>
                 </ul>
               </section>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">동아리 활동</h3>
-                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.clubs}</p>
-              </section>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">특화 프로그램</h3>
-                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.specialPrograms}</p>
-              </section>
-              <section>
-                <h3 className="text-xl font-semibold mb-2">전공의 미래 전망</h3>
-                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.future}</p>
-              </section>
+              <section><h3 className="text-xl font-semibold mb-2">동아리 활동</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.clubs}</p></section>
+              <section><h3 className="text-xl font-semibold mb-2">특화 프로그램</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.specialPrograms}</p></section>
+              <section><h3 className="text-xl font-semibold mb-2">전공의 미래 전망</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.future}</p></section>
             </div>
           )}
 
-          {/* 교육과정 탭 */}
           {activeTab === '교육과정' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">학년별 교육과정</h2>
@@ -250,25 +223,19 @@ const CollegeMajorPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {courseList.length > 0 ? (
-                      courseList.map(course => (
-                        <tr key={course.id} className="text-center">
-                          <td className="border p-2">{course.semester}</td>
-                          <td className="border p-2">{course.subjectCode}</td>
-                          <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
-                          <td className="border p-2">{course.completionType}</td>
-                          <td className="border p-2">{course.credit}</td>
-                          <td className="border p-2">{course.theoryHours}</td>
-                          <td className="border p-2">{course.practiceHours}</td>
-                          <td className="border p-2">{course.courseType}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={8} className="border p-4 text-center text-gray-500">
-                          데이터가 없습니다.
-                        </td>
+                    {courseList.length > 0 ? courseList.map(course => (
+                      <tr key={course.id} className="text-center">
+                        <td className="border p-2">{course.semester}</td>
+                        <td className="border p-2">{course.subjectCode}</td>
+                        <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
+                        <td className="border p-2">{course.completionType}</td>
+                        <td className="border p-2">{course.credit}</td>
+                        <td className="border p-2">{course.theoryHours}</td>
+                        <td className="border p-2">{course.practiceHours}</td>
+                        <td className="border p-2">{course.courseType}</td>
                       </tr>
+                    )) : (
+                      <tr><td colSpan={8} className="border p-4 text-center text-gray-500">데이터가 없습니다.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -276,7 +243,6 @@ const CollegeMajorPage = () => {
             </div>
           )}
 
-          {/* 교과목 안내 탭 */}
           {activeTab === '교과목안내' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">{selectedImage?.label || '전공'} 교과목 안내</h2>
@@ -284,24 +250,19 @@ const CollegeMajorPage = () => {
                 {selectedImage?.label || '해당 전공'}의 교과목 안내 이미지를 아래에서 확인할 수 있습니다.
               </p>
               {selectedImage ? (
-                <img
-                  src={selectedImage.src}
-                  alt={`${selectedImage.label} 교과목 이미지`}
-                  className="w-full h-auto rounded-lg shadow-lg"
-                />
+                <img src={selectedImage.src} alt={`${selectedImage.label} 교과목 이미지`} className="w-full h-auto rounded-lg shadow-lg" />
               ) : (
                 <p className="text-gray-500">해당 전공의 교과목 이미지가 준비되지 않았습니다.</p>
               )}
             </div>
           )}
 
-          {/* 시설 안내 탭 */}
           {activeTab === '시설 안내' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">학과 시설 안내</h2>
               <p className="text-gray-700 mb-6">지능형SW융합대학의 층별 시설 도식도를 확인할 수 있습니다.</p>
               <div className="flex space-x-2 mb-4">
-                {['1F', '2F', '3F', '4F', '5F'].map(floor => (
+                {Object.keys(floorImages).map(floor => (
                   <button
                     key={floor}
                     onClick={() => setFloorTab(floor)}
@@ -318,17 +279,6 @@ const CollegeMajorPage = () => {
           )}
         </div>
       </div>
-      <Footer />
-
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 120s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };
