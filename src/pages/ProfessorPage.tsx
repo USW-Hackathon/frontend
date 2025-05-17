@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
-import Footer from '＠/components/Footer';
 
 interface Professor {
   id: number;
@@ -167,8 +166,7 @@ const ProfessorPage = () => {
             )}
           </div>
         </div>
-          
-        <Footer />
+        
       {/* marquee 애니메이션 스타일 */}
       <style>{`
         @keyframes marquee {

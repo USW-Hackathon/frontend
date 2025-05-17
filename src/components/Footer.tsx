@@ -3,7 +3,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#3b3b3b] text-white py-12 px-4 text-sm">
+    <footer className="relative z-50 bg-[#3b3b3b] text-white py-12 px-4 text-sm">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
         
         {/* 왼쪽: 주소 및 연락처 */}
