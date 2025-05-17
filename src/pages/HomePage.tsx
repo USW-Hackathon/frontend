@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import useLogin from '@/hooks/useLogin';
 import { getCookie, setCookie } from '@/utils/cookies';
 import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
-import { Link } from 'react-router-dom';
 
 interface Notice {
   id: number;
@@ -83,13 +83,15 @@ const HomePage = () => {
     <div className="relative h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
       <Header />
       <video
-        className="fixed top-0 left-0 w-full h-full object-cover z-0"
+        className="fixed top-0 left-0 w-full h-full object-cover z-0 [::-webkit-media-controls]:hidden"
         src="https://www.suwon.ac.kr/usr/file/USW_video.mp4"
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
       />
+
       <div className="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
       <div className="relative z-20">
         <section ref={section1Ref} className="h-screen flex items-center justify-center snap-start">

@@ -10,9 +10,9 @@ import ict4F from '@/assets/ict_4F.png';
 import ict5F from '@/assets/ict_5F.png';
 import info from '@/assets/info.png';
 import infot from '@/assets/infot.png';
+import MarqueeBanner from '@/components/MarqueeBanner';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
-import MarqueeBanner from '@/components/MarqueeBanner';
 
 interface College {
   id: number;
@@ -80,7 +80,8 @@ const CollegeMajorPage = () => {
   const selectedCollegeId = '1';
 
   useEffect(() => {
-    const alias = location.pathname.split('/').pop() || '';
+    const segments = location.pathname.split('/');
+    const alias = segments.length >= 2 ? segments[segments.length - 2] : '';
     const image = majorImages[alias];
     setSelectedImage(image ?? null);
 
@@ -146,7 +147,11 @@ const CollegeMajorPage = () => {
       <Header />
       <div className="relative h-[480px] bg-[#0d0d1a] overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-end pr-12">
-          <img src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png" alt="USW 배경 로고" className="w-[600px] opacity-10 object-contain" />
+          <img
+            src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
+            alt="USW 배경 로고"
+            className="w-[600px] opacity-10 object-contain"
+          />
         </div>
         <div className="relative z-10 text-center pt-60">
           <h1 className="text-5xl font-extrabold">학과/학부</h1>
@@ -172,25 +177,54 @@ const CollegeMajorPage = () => {
           {activeTab === '소개' && selectedMajor && (
             <div className="bg-white text-black p-6 rounded-xl shadow space-y-6">
               <h2 className="text-3xl font-bold text-blue-700">{selectedMajor.name} 전공 소개</h2>
-              <section><h3 className="text-xl font-semibold mb-2">전공 개요</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.introduction}</p></section>
-              <section><h3 className="text-xl font-semibold mb-2">학과 위치 및 연락처</h3>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">전공 개요</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.introduction}</p>
+              </section>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">학과 위치 및 연락처</h3>
                 <ul className="text-gray-700 space-y-1">
-                  <li><strong>위치:</strong> {selectedMajor.location}</li>
-                  <li><strong>전화:</strong> {selectedMajor.phone}</li>
-                  <li><strong>팩스:</strong> {selectedMajor.fax}</li>
-                  <li><strong>근무시간:</strong> {selectedMajor.officeHours}</li>
+                  <li>
+                    <strong>위치:</strong> {selectedMajor.location}
+                  </li>
+                  <li>
+                    <strong>전화:</strong> {selectedMajor.phone}
+                  </li>
+                  <li>
+                    <strong>팩스:</strong> {selectedMajor.fax}
+                  </li>
+                  <li>
+                    <strong>근무시간:</strong> {selectedMajor.officeHours}
+                  </li>
                 </ul>
               </section>
-              <section><h3 className="text-xl font-semibold mb-2">연구소 및 연구 프로젝트</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.researchCenter}</p></section>
-              <section><h3 className="text-xl font-semibold mb-2">진로 및 자격증</h3>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">연구소 및 연구 프로젝트</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.researchCenter}</p>
+              </section>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">진로 및 자격증</h3>
                 <ul className="text-gray-800 list-disc pl-6">
-                  <li><strong>진로:</strong> {selectedMajor.career}</li>
-                  <li><strong>자격증:</strong> {selectedMajor.certifications}</li>
+                  <li>
+                    <strong>진로:</strong> {selectedMajor.career}
+                  </li>
+                  <li>
+                    <strong>자격증:</strong> {selectedMajor.certifications}
+                  </li>
                 </ul>
               </section>
-              <section><h3 className="text-xl font-semibold mb-2">동아리 활동</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.clubs}</p></section>
-              <section><h3 className="text-xl font-semibold mb-2">특화 프로그램</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.specialPrograms}</p></section>
-              <section><h3 className="text-xl font-semibold mb-2">전공의 미래 전망</h3><p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.future}</p></section>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">동아리 활동</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.clubs}</p>
+              </section>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">특화 프로그램</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.specialPrograms}</p>
+              </section>
+              <section>
+                <h3 className="text-xl font-semibold mb-2">전공의 미래 전망</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.future}</p>
+              </section>
             </div>
           )}
 
@@ -223,19 +257,25 @@ const CollegeMajorPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {courseList.length > 0 ? courseList.map(course => (
-                      <tr key={course.id} className="text-center">
-                        <td className="border p-2">{course.semester}</td>
-                        <td className="border p-2">{course.subjectCode}</td>
-                        <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
-                        <td className="border p-2">{course.completionType}</td>
-                        <td className="border p-2">{course.credit}</td>
-                        <td className="border p-2">{course.theoryHours}</td>
-                        <td className="border p-2">{course.practiceHours}</td>
-                        <td className="border p-2">{course.courseType}</td>
+                    {courseList.length > 0 ? (
+                      courseList.map(course => (
+                        <tr key={course.id} className="text-center">
+                          <td className="border p-2">{course.semester}</td>
+                          <td className="border p-2">{course.subjectCode}</td>
+                          <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
+                          <td className="border p-2">{course.completionType}</td>
+                          <td className="border p-2">{course.credit}</td>
+                          <td className="border p-2">{course.theoryHours}</td>
+                          <td className="border p-2">{course.practiceHours}</td>
+                          <td className="border p-2">{course.courseType}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={8} className="border p-4 text-center text-gray-500">
+                          데이터가 없습니다.
+                        </td>
                       </tr>
-                    )) : (
-                      <tr><td colSpan={8} className="border p-4 text-center text-gray-500">데이터가 없습니다.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -250,7 +290,11 @@ const CollegeMajorPage = () => {
                 {selectedImage?.label || '해당 전공'}의 교과목 안내 이미지를 아래에서 확인할 수 있습니다.
               </p>
               {selectedImage ? (
-                <img src={selectedImage.src} alt={`${selectedImage.label} 교과목 이미지`} className="w-full h-auto rounded-lg shadow-lg" />
+                <img
+                  src={selectedImage.src}
+                  alt={`${selectedImage.label} 교과목 이미지`}
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
               ) : (
                 <p className="text-gray-500">해당 전공의 교과목 이미지가 준비되지 않았습니다.</p>
               )}
