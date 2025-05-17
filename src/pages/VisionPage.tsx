@@ -2,6 +2,7 @@ import vision from '@/assets/vision.png';
 import Header from '../components/Common/Header';
 import SubHeader from '../components/SubHeader';
 import MarqueeBanner from '@/components/MarqueeBanner';
+import Footer from '@/components/Footer';
 
 const VisionPage = () => {
   return (
@@ -119,7 +120,7 @@ const VisionPage = () => {
           </div>
         </div>
       </div>
-
+      <Footer />
       {/* marquee 애니메이션 스타일 */}
       <style>{`
         @keyframes marquee {

@@ -3,6 +3,7 @@ import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
 import SubHeader from '../components/SubHeader';
 import MarqueeBanner from '@/components/MarqueeBanner';
+import Footer from '@/components/Footer';
  
 
 interface Professor {
@@ -134,7 +135,7 @@ const ProfessorPage = () => {
           )}
         </div>
       </div>
-
+      <Footer />
     </div>
   );
 };

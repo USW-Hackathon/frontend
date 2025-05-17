@@ -4,6 +4,7 @@ import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
 import SubHeader from '@/components/SubHeader'
 import MarqueeBanner from '@/components/MarqueeBanner';
+import Footer from '@/components/Footer';
 
 interface Notice {
   id: number;
@@ -143,7 +144,7 @@ const NoticePage = () => {
           </button>
         </div>
       </div>
-
+      <Footer />
       {/* marquee 애니메이션 */}
       <style>{`
         @keyframes marquee {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBoardPostId, deleteBoardPostId } from '../api/boardPost';
 import Header from '../components/Common/Header';
+import Footer from '@/components/Footer';
 
 interface BoardPost {
   id: number;
@@ -170,6 +171,7 @@ const BoardDetailPage = () => {
         </div>
       </div>
 
+      <Footer />
       {/* marquee 애니메이션 스타일 */}
       <style>{`
         @keyframes marquee {

@@ -13,6 +13,7 @@ import infot from '@/assets/infot.png';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
 import MarqueeBanner from '@/components/MarqueeBanner';
+import Footer from '@/components/Footer';
 
 interface College {
   id: number;
@@ -317,6 +318,7 @@ const CollegeMajorPage = () => {
           )}
         </div>
       </div>
+      <Footer />
 
       <style>{`
         @keyframes marquee {

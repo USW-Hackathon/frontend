@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postBoardPost } from '../api/boardPost';
 import Header from '../components/Common/Header';
+import Footer from '@/components/Footer';
 
 const categories = [
   { label: '뉴스', value: 1 },
@@ -106,6 +107,7 @@ const BoardWritePage = () => {
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

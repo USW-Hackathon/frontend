@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getNotice } from '../api/notice';
 import Header from '../components/Common/Header';
 import { getAllNotice } from '../api/notice';
+import Footer from '@/components/Footer';
 
 
 
@@ -141,6 +142,7 @@ const NoticeDetailPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
 
       {/* marquee 애니메이션 */}
       <style>{`

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import Header from '../components/Common/Header';
 import SubHeader from '../components/SubHeader';
 import MarqueeBanner from '@/components/MarqueeBanner';
+import Footer from '@/components/Footer';
 
 declare global {
   interface Window {
@@ -273,7 +274,7 @@ const Location = () => {
 
         </div>
       </div>
-
+      <Footer />
     </div>
   );
 };

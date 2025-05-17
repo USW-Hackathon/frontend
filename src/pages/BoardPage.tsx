@@ -4,6 +4,7 @@ import { getAllBoardPost } from '../api/boardPost';
 import Header from '../components/Common/Header';
 import SubHeader from '@/components/SubHeader'
 import MarqueeBanner from '@/components/MarqueeBanner';
+import Footer from '@/components/Footer';
 
 interface BoardPost {
   id: number;
@@ -79,6 +80,7 @@ const BoardPage = () => {
         </div>
       </div>
 
+      
       {/* 마퀴 배너 */}
       <MarqueeBanner />
       <SubHeader />
@@ -144,6 +146,7 @@ const BoardPage = () => {
           </button>
         </div>
       </div>
+      <Footer />
 
     </div>
   );
