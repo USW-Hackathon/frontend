@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Header from '../components/Common/Header';
+import ict1F from '@/assets/ict_1F.png';
+import ict2F from '@/assets/ict_2F.png';
+import ict3F from '@/assets/ict_3F.png';
+import ict4F from '@/assets/ict_4F.png';
+import ict5F from '@/assets/ict_5F.png';
 import SubHeader from '@/components/SubHeader';
+import Header from '../components/Common/Header';
 
 interface College {
   id: number;
@@ -26,7 +31,7 @@ interface MajorDetail {
   researchCenter: string;
 }
 
-const tabs = ['소개', '전공로드맵', '교육과정', '교과목안내'];
+const tabs = ['소개', '전공로드맵', '교육과정', '교과목안내', '시설 안내'];
 
 const CollegeMajorPage = () => {
   const [selectedCollegeId, setSelectedCollegeId] = useState('1');
@@ -34,6 +39,15 @@ const CollegeMajorPage = () => {
   const [selectedMajor, setSelectedMajor] = useState<MajorDetail | null>(null);
   const [activeTab, setActiveTab] = useState('소개');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [floorTab, setFloorTab] = useState('1F');
+
+  const floorImages: Record<string, string> = {
+    '1F': ict1F,
+    '2F': ict2F,
+    '3F': ict3F,
+    '4F': ict4F,
+    '5F': ict5F,
+  };
 
   const fetchCollegeData = async (id: string) => {
     try {
@@ -89,6 +103,7 @@ const CollegeMajorPage = () => {
         </div>
       </div>
       <SubHeader />
+
       {/* 흰색 본문 영역 시작 */}
       <div className="w-full bg-white text-black">
         <div className="max-w-6xl mx-auto px-4 py-10">
@@ -148,16 +163,38 @@ const CollegeMajorPage = () => {
             </div>
           )}
 
+          {activeTab === '시설 안내' && (
+            <div className="bg-white text-black p-6 rounded-xl shadow">
+              <h2 className="text-2xl font-bold mb-4">학과 시설 안내</h2>
+              <p className="text-gray-700 mb-6">지능형SW융합대학의 층별 시설 도식도를 확인할 수 있습니다.</p>
+
+              {/* 층 탭 */}
+              <div className="flex space-x-2 mb-4">
+                {['1F', '2F', '3F', '4F', '5F'].map(floor => (
+                  <button
+                    key={floor}
+                    onClick={() => setFloorTab(floor)}
+                    className={`px-4 py-2 rounded-md font-semibold ${
+                      floorTab === floor ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {floor}
+                  </button>
+                ))}
+              </div>
+
+              {/* 이미지 표시 */}
+              <div className="overflow-auto border rounded-lg p-2">
+                <img src={floorImages[floorTab]} alt={`${floorTab} 도식도`} className="w-full h-auto object-contain" />
+              </div>
+            </div>
+          )}
+
           {activeTab === '교수진' && <div>💡 교수진 목록 컴포넌트 삽입 예정</div>}
           {activeTab === '교육과정' && <div>💡 교육과정 목록 컴포넌트 삽입 예정</div>}
           {activeTab === '교과목안내' && <div>💡 교과목 리스트 API 기반 출력 예정</div>}
         </div>
       </div>
-
-      {/* 푸터 */}
-      <footer className="bg-[#003670] text-white py-4 text-center">
-        <p>© 2024 USW. All rights reserved.</p>
-      </footer>
 
       <style>{`
         @keyframes marquee {
