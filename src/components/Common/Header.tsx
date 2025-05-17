@@ -2,8 +2,9 @@
 import { useEffect, useState } from 'react';
 import { Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getCookie } from '@/utils/cookies';
+import { Link } from 'react-router-dom';
 import { logout } from '@/api/auth/logout';
+import { getCookie } from '@/utils/cookies';
 
 const handleLogout = async () => {
   await logout();
@@ -67,8 +68,9 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'
-        }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
+        isHidden ? '-translate-y-full' : 'translate-y-0'
+      }`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -76,34 +78,38 @@ export default function Header() {
       <div className="hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full items-center px-6 py-3 bg-[#0d0d1a]">
         {/* 로고 */}
         <div className="flex items-center h-[48px] gap-3 z-10 relative">
-          <img
-            src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
-            alt="로고"
-            className="h-[44px] object-contain ml-0"
-          />
-          <div className="flex flex-col justify-center leading-[1.05] transform -translate-y-[1px]">
-            <span className="text-[22px] font-extrabold text-white whitespace-nowrap mb-[8px]">
-              지능형SW융합대학
-            </span>
-            <span className="text-[7.5px] font-semibold text-white/70 tracking-tight whitespace-nowrap">
-              COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE
-            </span>
-          </div>
+          <Link to="/" className="flex items-center h-[48px] gap-3 z-10 relative cursor-pointer">
+            <img
+              src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
+              alt="로고"
+              className="h-[44px] object-contain ml-0"
+            />
+            <div className="flex flex-col justify-center leading-[1.05] transform -translate-y-[1px]">
+              <span className="text-[22px] font-extrabold text-white whitespace-nowrap mb-[8px]">지능형SW융합대학</span>
+              <span className="text-[7.5px] font-semibold text-white/70 tracking-tight whitespace-nowrap">
+                COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE
+              </span>
+            </div>
+          </Link>
         </div>
 
         {/* 메뉴 */}
         {menus.map((menu, index) => (
           <div key={index} className="text-center">
-            <div className="text-lg font-semibold text-white hover:text-blue-300 cursor-pointer">
-              {menu.label}
-            </div>
+            <div className="text-lg font-semibold text-white hover:text-blue-300 cursor-pointer">{menu.label}</div>
           </div>
         ))}
 
         {/* 로그인/로그아웃 */}
         <div className="text-right pr-2">
           {!isLogin ? (
-            <span onClick={() => navigate('/login')} className="text-sm font-semibold text-blue-700 hover:underline cursor-pointer">
+            <span
+              onClick={() => {
+                const event = new CustomEvent('scrollToLoginSection');
+                window.dispatchEvent(event);
+              }}
+              className="text-sm font-semibold text-blue-700 hover:underline cursor-pointer"
+            >
               로그인
             </span>
           ) : (
@@ -111,12 +117,15 @@ export default function Header() {
               <div>
                 <span
                   className="cursor-pointer hover:text-blue-300"
-                  onClick={() => window.location.href = 'https://portal.suwon.ac.kr/enview/index.html'}
+                  onClick={() => (window.location.href = 'https://portal.suwon.ac.kr/enview/index.html')}
                 >
                   {userName}
                 </span>
                 <span>/</span>
-                <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
+                <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}>
+                  {' '}
+                  logout
+                </span>
               </div>
             </span>
           )}
@@ -125,8 +134,9 @@ export default function Header() {
 
       {/* 데스크탑 하위 메뉴 */}
       <div
-        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
-          }`}
+        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${
+          isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
+        }`}
       >
         <div></div>
         {menus.map((menu, index) => (
@@ -148,11 +158,7 @@ export default function Header() {
       {/* 모바일 상단바 */}
       <div className="w-full flex items-center justify-between px-6 py-3 bg-[#0d0d1a] lg:hidden">
         <div className="flex items-center gap-3">
-          <img
-            src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
-            alt="로고"
-            className="h-10"
-          />
+          <img src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png" alt="로고" className="h-10" />
           <span className="text-lg font-bold text-white whitespace-nowrap">지능형SW융합대학</span>
         </div>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -189,12 +195,14 @@ export default function Header() {
                 <div>
                   <span
                     className="cursor-pointer hover:text-blue-300"
-                    onClick={() => window.location.href = 'https://portal.suwon.ac.kr/enview/index.html'}
+                    onClick={() => (window.location.href = 'https://portal.suwon.ac.kr/enview/index.html')}
                   >
                     {userName}
                   </span>
                   <span>/</span>
-                  <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
+                  <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}>
+                    logout
+                  </span>
                 </div>
               )}
             </div>
