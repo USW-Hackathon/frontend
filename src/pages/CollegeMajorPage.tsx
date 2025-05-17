@@ -50,11 +50,11 @@ interface Course {
   courseType: string;
 }
 
-const majorImages: Record<string, { src: string; label: string }> = {
-  computer: { src: com, label: '컴퓨터SW' },
-  data: { src: data, label: '데이터 과학부' },
-  ict: { src: info, label: '정보통신' },
-  cloud: { src: infot, label: '클라우드융복합' },
+const majorImages: Record<string, { src: string; label: string; value: number}> = {
+  computer: { src: com, label: '컴퓨터SW',value: 1},
+  data: { src: data, label: '데이터 과학부' ,value: 2},
+  ict: { src: info, label: '정보통신' ,value: 3},
+  cloud: { src: infot, label: '클라우드융복합',value: 4 },
 };
 
 const floorImages: Record<string, string> = {
@@ -87,7 +87,7 @@ const CollegeMajorPage = () => {
 
     const fetchMajorInfo = async () => {
       try {
-        const res = await axios.get(`http://223.195.111.30:5062/major/${alias}`);
+        const res = await axios.get(`http://223.195.111.30:5062/major/${image?.value}`);
         if (res.data?.id) {
           setMajorId(res.data.id);
           fetchMajorDetail(res.data.id);
