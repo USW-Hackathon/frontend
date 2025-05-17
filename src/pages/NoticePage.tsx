@@ -99,24 +99,6 @@ const NoticePage = () => {
       <SubHeader />
       {/* 아래 전체 영역 흰색으로 */}
       <div className="w-full bg-white text-black">
-        {/* 카테고리 탭 */}
-        <div className="max-w-4xl mx-auto px-4 pt-12">
-          <div className="flex space-x-2 border-b border-gray-300">
-            {categories.map(cat => (
-              <button
-                key={cat.value}
-                onClick={() => handleCategoryClick(cat.value)}
-                className={`px-4 py-2 text-sm font-semibold rounded-t-md transition
-                  ${category === cat.value
-                    ? 'bg-black text-white border-l border-t border-r border-black'
-                    : 'text-black hover:text-gray-500'
-                  }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* 공지 목록 */}
         <div className="max-w-4xl mx-auto px-4 py-12">
