@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getAllBoardPost } from '../api/boardPost';
 import Header from '../components/Common/Header';
+import SubHeader from '@/components/SubHeader'
 
 interface BoardPost {
   id: number;
@@ -32,10 +33,11 @@ const BoardPage = () => {
 
   const fetchBoardPosts = async () => {
     try {
-      const query: any = { page, size };
-      if (categoryId !== '0') {
-        query.categoryId = Number(categoryId);
-      }
+      const query: any = {
+        page,
+        size,
+        categoryId: Number(categoryId), // 0도 포함해서 항상 전달
+      };
 
       const res = await getAllBoardPost(query);
       setPosts(res.data.boardPostList);
@@ -84,6 +86,7 @@ const BoardPage = () => {
           <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
         </div>
       </div>
+      <SubHeader />
 
       {/* 흰색 영역 */}
       <div className="w-full bg-white text-black">
@@ -94,11 +97,10 @@ const BoardPage = () => {
               <button
                 key={cat.value}
                 onClick={() => handleCategoryChange(cat.value)}
-                className={`px-4 py-2 text-sm font-semibold rounded-t-md transition ${
-                  categoryId === cat.value
+                className={`px-4 py-2 text-sm font-semibold rounded-t-md transition ${categoryId === cat.value
                     ? 'bg-black text-white border-l border-t border-r border-black'
                     : 'text-black hover:text-gray-500'
-                }`}
+                  }`}
               >
                 {cat.label}
               </button>
@@ -146,9 +148,8 @@ const BoardPage = () => {
             <button
               key={p}
               onClick={() => handlePageChange(p)}
-              className={`px-3 py-1 rounded ${
-                page === p ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'
-              }`}
+              className={`px-3 py-1 rounded ${page === p ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'
+                }`}
             >
               {p}
             </button>

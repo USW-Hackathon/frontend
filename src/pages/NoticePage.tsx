@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
+import SubHeader from '@/components/SubHeader'
 
 interface Notice {
   id: number;
@@ -95,7 +96,7 @@ const NoticePage = () => {
           <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
         </div>
       </div>
-
+      <SubHeader />
       {/* 아래 전체 영역 흰색으로 */}
       <div className="w-full bg-white text-black">
         {/* 카테고리 탭 */}

@@ -7,6 +7,10 @@ import ict4F from '@/assets/ict_4F.png';
 import ict5F from '@/assets/ict_5F.png';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
+import com from '@/assets/com.png';
+import data from '@/assets/data.png';
+import info from '@/assets/info.png';
+import infot from '@/assets/infot.png';
 
 interface College {
   id: number;
@@ -31,7 +35,7 @@ interface MajorDetail {
   researchCenter: string;
 }
 
-const tabs = ['소개', '전공로드맵', '교육과정', '교과목안내', '시설 안내'];
+const tabs = ['소개', '교육과정', '교과목안내', '시설 안내'];
 
 const CollegeMajorPage = () => {
   const [selectedCollegeId, setSelectedCollegeId] = useState('1');
@@ -49,6 +53,14 @@ const CollegeMajorPage = () => {
     '3F': ict3F,
     '4F': ict4F,
     '5F': ict5F,
+  };
+
+  const majorImages: Record<string, string> = {
+    컴퓨터SW: com,
+    미디어SW: com,
+    데이터사이언스: data,
+    정보보호: info,
+    정보통신: infot,
   };
 
   const fetchCollegeData = async (id: string) => {
@@ -134,47 +146,12 @@ const CollegeMajorPage = () => {
               </button>
             ))}
           </div>
-
           {activeTab === '소개' && college && (
             <div className="bg-gray-50 p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-2">{college.name}</h2>
               <p className="whitespace-pre-wrap text-gray-800">{college.description || '설명이 없습니다.'}</p>
             </div>
           )}
-
-          {activeTab === '전공로드맵' && college && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {college.majorName.map(m => (
-                <button
-                  key={m.id}
-                  onClick={() => fetchMajorDetail(m.id)}
-                  className="border rounded-lg p-4 bg-white text-black hover:bg-blue-50 transition"
-                >
-                  {m.name}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {activeTab === '전공로드맵' && selectedMajor && (
-            <div className="bg-white text-black p-6 mt-6 rounded-xl shadow">
-              <h3 className="text-xl font-bold mb-2">{selectedMajor.name}</h3>
-              <p className="mb-4 whitespace-pre-wrap text-gray-800">{selectedMajor.introduction}</p>
-              <ul className="text-sm space-y-1">
-                <li><strong>위치:</strong> {selectedMajor.location}</li>
-                <li><strong>전화:</strong> {selectedMajor.phone}</li>
-                <li><strong>팩스:</strong> {selectedMajor.fax}</li>
-                <li><strong>근무시간:</strong> {selectedMajor.officeHours}</li>
-                <li><strong>미래 전망:</strong> {selectedMajor.future}</li>
-                <li><strong>동아리:</strong> {selectedMajor.clubs}</li>
-                <li><strong>자격증:</strong> {selectedMajor.certifications}</li>
-                <li><strong>연구소:</strong> {selectedMajor.researchCenter}</li>
-                <li><strong>진로:</strong> {selectedMajor.career}</li>
-                <li><strong>특화 프로그램:</strong> <pre className="whitespace-pre-wrap inline">{selectedMajor.specialPrograms}</pre></li>
-              </ul>
-            </div>
-          )}
-
           {activeTab === '교육과정' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">학년별 교육과정</h2>
@@ -221,12 +198,33 @@ const CollegeMajorPage = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={8} className="border p-4 text-center text-gray-500">데이터가 없습니다.</td>
+                        <td colSpan={8} className="border p-4 text-center text-gray-500">
+                          데이터가 없습니다.
+                        </td>
                       </tr>
                     )}
                   </tbody>
                 </table>
               </div>
+            </div>
+          )}
+          
+          {activeTab === '교과목안내' && selectedMajor && (
+            <div className="bg-white text-black p-6 rounded-xl shadow">
+              <h2 className="text-2xl font-bold mb-4">{selectedMajor.name} 교과목 안내</h2>
+              <p className="text-gray-700 mb-6">
+                {selectedMajor.name} 전공의 교과목 안내 이미지를 아래에서 확인할 수 있습니다.
+              </p>
+
+              {majorImages[selectedMajor.name] ? (
+                <img
+                  src={majorImages[selectedMajor.name]}
+                  alt={`${selectedMajor.name} 교과목 이미지`}
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
+              ) : (
+                <p className="text-gray-500">해당 전공의 교과목 이미지가 준비되지 않았습니다.</p>
+              )}
             </div>
           )}
 

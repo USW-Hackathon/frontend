@@ -17,6 +17,8 @@ const BoardDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState<BoardPost | null>(null);
+  const [prevPost, setPrevPost] = useState<BoardPost | null>(null);
+  const [nextPost, setNextPost] = useState<BoardPost | null>(null);
 
   const fetchPost = async () => {
     try {
@@ -24,6 +26,22 @@ const BoardDetailPage = () => {
       setPost(res.data);
     } catch (e) {
       console.error('게시글 조회 실패:', e);
+    }
+  };
+
+  const fetchAdjacentPosts = async () => {
+    try {
+      const nextRes = await getBoardPostId({ id: Number(id) - 1 }); // 다음글
+      setNextPost(nextRes.data);
+    } catch (e) {
+      setNextPost(null);
+    }
+
+    try {
+      const prevRes = await getBoardPostId({ id: Number(id) + 1 }); // 이전글
+      setPrevPost(prevRes.data);
+    } catch (e) {
+      setPrevPost(null);
     }
   };
 
@@ -45,6 +63,7 @@ const BoardDetailPage = () => {
 
   useEffect(() => {
     fetchPost();
+    fetchAdjacentPosts();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
 
@@ -56,7 +75,7 @@ const BoardDetailPage = () => {
     <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
       <Header />
 
-      {/* 🟡 게시판 상단 영역 */}
+      {/* 상단 영역 */}
       <div className="relative h-[480px] bg-[#0d0d1a] overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-end pr-12">
           <img
@@ -83,29 +102,75 @@ const BoardDetailPage = () => {
       <div className="w-full bg-white text-black">
         <div className="max-w-3xl mx-auto py-16 px-4">
           <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-          <p className="text-gray-600 text-sm mb-6">
+          <hr className="border-gray-700 mb-4" />
+          <p className="text-gray-600 text-sm mb-4">
             작성자: {post.writer} | 날짜: {post.createdAt.split('T')[0]} | 조회수: {post.viewCount}
           </p>
-          <div className="text-gray-800 whitespace-pre-wrap">{post.content}</div>
+          <hr className="border-gray-300 mb-6" />
+          <div className="text-gray-800 whitespace-pre-wrap mb-12">{post.content}</div>
+
+          {/* 이전글 */}
+          <hr className="border-gray-300 my-3" />
+          <div className="flex items-center gap-2 py-1 text-sm text-gray-800">
+            <span className="font-bold">이전글</span>
+            {prevPost ? (
+              <>
+                <span
+                  className="text-lg cursor-pointer hover:text-blue-600"
+                  onClick={() => navigate(`/board-posts/${prevPost.id}`)}
+                >
+                  ⏶
+                </span>
+                <span
+                  className="cursor-pointer hover:text-blue-600"
+                  onClick={() => navigate(`/board-posts/${prevPost.id}`)}
+                >
+                  {prevPost.title}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-lg text-gray-400">⏶</span>
+                <span className="text-gray-400">없음</span>
+              </>
+            )}
+          </div>
+
+          {/* 다음글 */}
+          <hr className="border-gray-300 my-2" />
+          <div
+            className={`flex items-center gap-2 py-1 text-sm text-gray-800 ${
+              nextPost ? 'cursor-pointer hover:text-blue-600' : ''
+            }`}
+            onClick={() => nextPost && navigate(`/board/${nextPost.id}`)}
+          >
+            <span className="font-bold">다음글</span>
+            <span className="text-lg">⏷</span>
+            <span>{nextPost ? nextPost.title : '없음'}</span>
+          </div>
+
+          <hr className="border-gray-300 my-3" />
 
           <div className="flex gap-2 mt-12">
             <button
+              type="button"
               onClick={() => navigate('/board')}
               className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
             >
               목록으로 돌아가기
             </button>
-            <button
+            {/* 삭제 기능 사용 시 주석 해제 */}
+            { <button
               onClick={handleDelete}
               className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
               삭제
-            </button>
+            </button>}
           </div>
         </div>
       </div>
 
-      {/* marquee 애니메이션 */}
+      {/* marquee 애니메이션 스타일 */}
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
