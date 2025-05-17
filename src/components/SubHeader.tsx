@@ -7,13 +7,24 @@ interface SubHeaderProps {
   defaultSubCategoryPath?: string;
 }
 
-const menuMap: Record<
-  string,
-  {
-    value: string;
-    sub: Array<{ name: string; path: string }>;
-  }
-> = {
+interface SubSubMenuItem {
+  name: string;
+  path: string;
+  value: number;
+}
+
+interface SubMenuItem {
+  name: string;
+  path: string;
+  sub?: SubSubMenuItem[];
+}
+
+interface MenuItem {
+  value: string;
+  sub: SubMenuItem[];
+}
+
+const menuMap: Record<string, MenuItem> = {
   '대학안내': {
     value: 'about',
     sub: [
@@ -25,10 +36,36 @@ const menuMap: Record<
   '학과/학부': {
     value: 'departments',
     sub: [
-      { name: '컴퓨터학부', path: '/departments/computer' },
-      { name: '정보통신학부', path: '/departments/ict' },
-      { name: '데이터과학부', path: '/departments/data' },
-      { name: '클라우드융복합', path: '/departments/cloud' },
+      {
+        name: '컴퓨터학부',
+        path: '/departments/computer/1',
+        sub: [
+          { name: '컴퓨터 SW', path: '/departments/computer/1' ,value: 1},
+          { name: '미디어 SW', path: '/departments/computer/2' ,value: 2},
+        ],
+      },
+      {
+        name: '정보통신학부',
+        path: '/departments/ict/3',
+        sub: [
+          { name: '정보보호', path: '/departments/ict/3' ,value:3},
+          { name: '정보통신', path: '/departments/ict/4' ,value:4},
+        ],
+      },
+      {
+        name: '데이터과학부',
+        path: '/departments/data/5',
+        sub: [
+          { name: '데이터과학', path: '/departments/data/5',value:5 },
+        ],
+      },
+      {
+        name: '클라우드융복합',
+        path: '/departments/cloud/6',
+        sub: [
+          { name: '클라우드 ', path: '/departments/cloud/6' ,value:6}
+        ],
+      },
     ],
   },
   '공지사항': {
@@ -67,54 +104,81 @@ const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderPro
 
   const [mainCategory, setMainCategory] = useState(resolvedMain);
   const [subCategory, setSubCategory] = useState(resolvedSub);
+  const [subSubCategory, setSubSubCategory] = useState<SubSubMenuItem | null>(null);
 
   const [mainOpen, setMainOpen] = useState(false);
   const [subOpen, setSubOpen] = useState(false);
+  const [subSubOpen, setSubSubOpen] = useState(false);
 
   useEffect(() => {
-    if (defaultMainCategory && defaultSubCategoryPath) {
-      setMainCategory(defaultMainCategory);
-      const sub = menuMap[defaultMainCategory].sub.find(item => item.path === defaultSubCategoryPath);
-      if (sub) setSubCategory(sub);
+  const path = location.pathname;
+  const segments = path.split('/').filter(Boolean);
+
+  if (segments[0] === 'departments') {
+    const mainKey = '학과/학부';
+    const deptGroup = `/departments/${segments[1]}`;
+    const fullPath = `/departments/${segments[1]}/${segments[2]}`;
+
+    const subMenu = menuMap[mainKey].sub.find(item => item.path.startsWith(deptGroup));
+    const subSubMenu = subMenu?.sub?.find(item => item.path === fullPath);
+
+    setMainCategory(mainKey);
+    if (subMenu) setSubCategory(subMenu);
+    if (subSubMenu) setSubSubCategory(subSubMenu);
+    return;
+  }
+
+  for (const [mainKey, { sub }] of Object.entries(menuMap)) {
+    const match = sub.find(item => path.startsWith(item.path));
+    if (match) {
+      setMainCategory(mainKey);
+      setSubCategory(match);
+      setSubSubCategory(null);
       return;
     }
+  }
 
-    const path = location.pathname;
+  setMainCategory(fallbackMain);
+  setSubCategory(fallbackSub);
+  setSubSubCategory(null);
+}, [location.pathname, defaultMainCategory, defaultSubCategoryPath]);
 
-    for (const [mainKey, { sub }] of Object.entries(menuMap)) {
-      const match = sub.find(item => path.startsWith(item.path));
-      if (match) {
-        setMainCategory(mainKey);
-        setSubCategory(match);
-        return;
-      }
-    }
-
-    setMainCategory(fallbackMain);
-    setSubCategory(fallbackSub);
-  }, [location.pathname, defaultMainCategory, defaultSubCategoryPath]);
 
   const handleMainSelect = (item: string) => {
     const firstSub = menuMap[item].sub[0];
     setMainCategory(item);
     setSubCategory(firstSub);
+    setSubSubCategory(null);
     setMainOpen(false);
     setSubOpen(false);
+    setSubSubOpen(false);
     navigate(firstSub.path);
   };
 
-  const handleSubSelect = (item: { name: string; path: string }) => {
+  const handleSubSelect = (item: SubMenuItem) => {
     setSubCategory(item);
+    setSubSubCategory(null);
     setMainOpen(false);
     setSubOpen(false);
+    setSubSubOpen(false);
+    navigate(item.path);
+  };
+
+  const handleSubSubSelect = (item: SubSubMenuItem) => {
+    setSubSubCategory(item);
+    setMainOpen(false);
+    setSubOpen(false);
+    setSubSubOpen(false);
     navigate(item.path);
   };
 
   const handleHome = () => {
     setMainCategory(fallbackMain);
     setSubCategory(fallbackSub);
+    setSubSubCategory(null);
     setMainOpen(false);
     setSubOpen(false);
+    setSubSubOpen(false);
     navigate('/');
   };
 
@@ -130,12 +194,12 @@ const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderPro
         </button>
         <div className="h-6 border-l border-white"></div>
 
-        {/* 상위 탭 */}
         <div className="relative">
           <button
             onClick={() => {
               setMainOpen(prev => !prev);
               setSubOpen(false);
+              setSubSubOpen(false);
             }}
             className="pr-4 pl-4 w-[10rem] py-2 font-semibold hover:text-blue-300 text-left"
           >
@@ -163,12 +227,12 @@ const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderPro
 
         <div className="h-6 border-l border-white"></div>
 
-        {/* 하위 탭 */}
         <div className="relative">
           <button
             onClick={() => {
               setSubOpen(prev => !prev);
               setMainOpen(false);
+              setSubSubOpen(false);
             }}
             className="pr-4 pl-4 w-[10rem] py-2 font-semibold hover:text-blue-300 text-left"
           >
@@ -193,6 +257,42 @@ const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderPro
             </ul>
           )}
         </div>
+
+        {mainCategory === '학과/학부' && subCategory.sub && (
+          <>
+            <div className="h-6 border-l border-white"></div>
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setSubSubOpen(prev => !prev);
+                  setMainOpen(false);
+                  setSubOpen(false);
+                }}
+                className="pr-4 pl-4 w-[10rem] py-2 font-semibold hover:text-blue-300 text-left"
+              >
+                <div className="flex items-center justify-center gap-1">
+                  <span className="w-full text-center">
+                    {subSubCategory ? subSubCategory.name : '학과 선택'}
+                  </span>
+                  <ChevronDown size={16} />
+                </div>
+              </button>
+              {subSubOpen && (
+                <ul className="absolute mt-2 w-[10rem] bg-[#244b77] rounded shadow-lg text-base z-50 text-center">
+                  {subCategory.sub?.filter(item => item.name !== subSubCategory?.name).map(item => (
+                    <li
+                      key={item.name}
+                      onClick={() => handleSubSubSelect(item)}
+                      className="px-4 py-2 hover:bg-blue-600 cursor-pointer"
+                    >
+                      {item.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

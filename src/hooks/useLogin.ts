@@ -10,7 +10,7 @@ const useLogin = ({ onSuccess, onError }: UseLoginParams = {}) => {
   return useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      console.log('로그인 성공:', data.data.userName);
+      console.log('로그인 성공:', data.userName);
       onSuccess?.(data); // 외부 콜백 호출
     },
     onError: (error) => {

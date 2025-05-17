@@ -32,10 +32,10 @@ const RouterProvider = () => {
         <Route path="/board-posts/write" element={<BoardWritePage />} />
         <Route path="/board-posts/:id" element={<BoardDetailPage />} />
         <Route path="/college-major" element={<CollegeMajorPage />} /> 
-        <Route path="/departments/computer" element={<CollegeMajorPage />} /> 
-        <Route path="/departments/ict" element={<CollegeMajorPage />} /> 
-        <Route path="/departments/data" element={<CollegeMajorPage />} />
-        <Route path="/departments/cloud" element={<CollegeMajorPage />} />
+        <Route path="/departments/computer/:id" element={<CollegeMajorPage />} /> 
+        <Route path="/departments/ict/:id" element={<CollegeMajorPage />} /> 
+        <Route path="/departments/data/:id" element={<CollegeMajorPage />} />
+        <Route path="/departments/cloud/:id" element={<CollegeMajorPage />} />
         {/* Add more routes here as needed */}
       </Routes>
     </Router>

@@ -23,10 +23,10 @@ const menus = [
   {
     label: '학과/학부',
     children: [
-      { name: '컴퓨터학부', path: '/departments/computer' },
-      { name: '정보통신학부', path: '/departments/ict' },
-      { name: '데이터과학부', path: '/departments/datascience' },
-      { name: '클라우드융복합', path: '/departments/cloud' },
+      { name: '컴퓨터학부', path: '/departments/computer/1' },
+      { name: '정보통신학부', path: '/departments/ict/3' },
+      { name: '데이터과학부', path: '/departments/datascience/5' },
+      { name: '클라우드융복합', path: '/departments/cloud/6' },
     ],
   },
   {
@@ -68,9 +68,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
-        isHidden ? '-translate-y-full' : 'translate-y-0'
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -105,8 +104,7 @@ export default function Header() {
           {!isLogin ? (
             <span
               onClick={() => {
-                const event = new CustomEvent('scrollToLoginSection');
-                window.dispatchEvent(event);
+                navigate('/');
               }}
               className="text-sm font-semibold text-blue-700 hover:underline cursor-pointer"
             >
@@ -134,9 +132,8 @@ export default function Header() {
 
       {/* 데스크탑 하위 메뉴 */}
       <div
-        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${
-          isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
-        }`}
+        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
+          }`}
       >
         <div></div>
         {menus.map((menu, index) => (
@@ -167,48 +164,50 @@ export default function Header() {
       </div>
 
       {/* 모바일 메뉴 */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-[#1a2238] border-t border-gray-200 z-40">
-          <div className="p-4 space-y-4 text-white">
-            {menus.map((menu, index) => (
-              <div key={index}>
-                <div className="font-semibold mb-2">{menu.label}</div>
-                <div className="flex flex-col space-y-1 pl-4">
-                  {menu.children.map((child, idx) => (
+      {
+        mobileMenuOpen && (
+          <div className="lg:hidden absolute top-full left-0 w-full bg-[#1a2238] border-t border-gray-200 z-40">
+            <div className="p-4 space-y-4 text-white">
+              {menus.map((menu, index) => (
+                <div key={index}>
+                  <div className="font-semibold mb-2">{menu.label}</div>
+                  <div className="flex flex-col space-y-1 pl-4">
+                    {menu.children.map((child, idx) => (
+                      <span
+                        key={idx}
+                        className="text-sm hover:text-blue-300 cursor-pointer"
+                        onClick={() => navigate(child.path)}
+                      >
+                        {child.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div className="pt-4 border-t text-sm font-semibold text-right">
+                {!isLogin ? (
+                  <span onClick={() => navigate('/login')} className="cursor-pointer hover:text-blue-300">
+                    로그인
+                  </span>
+                ) : (
+                  <div>
                     <span
-                      key={idx}
-                      className="text-sm hover:text-blue-300 cursor-pointer"
-                      onClick={() => navigate(child.path)}
+                      className="cursor-pointer hover:text-blue-300"
+                      onClick={() => (window.location.href = 'https://portal.suwon.ac.kr/enview/index.html')}
                     >
-                      {child.name}
+                      {userName}
                     </span>
-                  ))}
-                </div>
+                    <span>/</span>
+                    <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}>
+                      logout
+                    </span>
+                  </div>
+                )}
               </div>
-            ))}
-            <div className="pt-4 border-t text-sm font-semibold text-right">
-              {!isLogin ? (
-                <span onClick={() => navigate('/login')} className="cursor-pointer hover:text-blue-300">
-                  로그인
-                </span>
-              ) : (
-                <div>
-                  <span
-                    className="cursor-pointer hover:text-blue-300"
-                    onClick={() => (window.location.href = 'https://portal.suwon.ac.kr/enview/index.html')}
-                  >
-                    {userName}
-                  </span>
-                  <span>/</span>
-                  <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}>
-                    logout
-                  </span>
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      )}
-    </header>
+        )
+      }
+    </header >
   );
 }

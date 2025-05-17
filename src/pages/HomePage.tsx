@@ -1,14 +1,11 @@
-// src/pages/HomePage.tsx
 import { useEffect, useRef, useState } from 'react';
-// 헤더 컴포넌트
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import useLogin from '@/hooks/useLogin';
-import { getAllNotice, getCategoryNotice, getNotice } from '../api/notice';
+import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
 import { getCookie, setCookie } from '@/utils/cookies';
-
 
 interface Notice {
   id: number;
@@ -33,9 +30,14 @@ const HomePage = () => {
   const [notice1, setNotice1] = useState<Notice | null>(null);
   const [notice2, setNotice2] = useState<Notice | null>(null);
   const [notice3, setNotice3] = useState<Notice | null>(null);
-  const navigate = useNavigate();
-  const loginMutation = useLogin();
   const [username, setUsername] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const loginMutation = useLogin({
+    onSuccess: () => {
+      window.location.reload(); // ✅ 로그인 후 전체 새로고침
+    },
+  });
 
   const {
     register,
@@ -78,9 +80,7 @@ const HomePage = () => {
 
   return (
     <div className="relative h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
-      {/* 상단 헤더 */}
       <Header />
-      {/* 배경 영상 */}
       <video
         className="fixed top-0 left-0 w-full h-full object-cover z-0"
         src="https://www.suwon.ac.kr/usr/file/USW_video.mp4"
@@ -89,13 +89,8 @@ const HomePage = () => {
         muted
         playsInline
       />
-
-      {/* 반투명 오버레이 */}
       <div className="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
-
-      {/* 섹션 내용 */}
       <div className="relative z-20">
-        {/* 섹션 1 */}
         <section ref={section1Ref} className="h-screen flex items-center justify-center snap-start">
           <div className="text-white text-center px-6">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">수원대학교 지능형SW융합대학</h1>
@@ -105,36 +100,26 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* 메인 섹션 2 */}
-        <section
-          ref={section2Ref}
-          className="h-auto flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-16"
-        >
+        <section ref={section2Ref} className="h-auto flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-16">
           <div className="flex flex-col w-full max-w-7xl justify-start gap-16 mt-10">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* 로그인 박스 */}
-              {/* 로그인 박스 (조건부 렌더링) */}
               {username ? (
-                <div className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-center items-center">
+                <div className="bg-white/15 text-white border-gray-200 p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-center items-center">
                   <h2 className="text-2xl font-bold mb-4 text-white">환영합니다 👋</h2>
                   <p className="text-lg text-white font-semibold">{username}님, 환영합니다!</p>
                   <button
                     className="mt-6 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
                     onClick={() => {
+                      setCookie('username', '', { path: '/', maxAge: 0 });
                       setUsername(null);
-                      setCookie('username', '', { path: '/', maxAge: 0 }); // 로그아웃 처리
                     }}
                   >
                     로그아웃
                   </button>
                 </div>
               ) : (
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="bg-white/15 text-white p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between">
                   <h2 className="text-2xl font-bold mb-6 text-center text-white">LOGIN</h2>
-
                   <div className="mb-4">
                     <input
                       type="text"
@@ -144,7 +129,6 @@ const HomePage = () => {
                     />
                     {errors.memberId && <p className="text-red-500 text-sm mt-1">{errors.memberId.message}</p>}
                   </div>
-
                   <div className="mb-4">
                     <input
                       type="password"
@@ -154,56 +138,34 @@ const HomePage = () => {
                     />
                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                   </div>
-
-                  <div className="flex items-center justify-between mb-4 text-sm text-white">
-                    <label className="flex items-center">
-                      <input type="checkbox" className="mr-2" /> 아이디 저장
-                    </label>
-                    <div className="flex space-x-2 font-semibold">
-                      <a href="#">아이디 찾기</a>
-                      <span>|</span>
-                      <a href="#">비밀번호 찾기</a>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300"
-                  >
+                  <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300">
                     로그인
                   </button>
-
                   <div className="mt-4 p-3 bg-red-50 text-xs text-left text-gray-800 rounded-md border border-red-200">
-                    <p className="mb-1">
-                      <span className="font-semibold text-red-600">※ 아이디 :</span> 학번 또는 사번
-                    </p>
-                    <p>
-                      <span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!
-                    </p>
+                    <p className="mb-1"><span className="font-semibold text-red-600">※ 아이디 :</span> 학번 또는 사번</p>
+                    <p><span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!</p>
                   </div>
                 </form>
               )}
 
-              {/* 공지사항 우측 영역 */}
               <div className="flex flex-col w-full md:w-2/3">
                 <div className="flex flex-col h-full">
-                  <div className="bg-white/0 p-4 rounded-2xl text-white shadow-null h-1/3">
-                    <h2
-                      onClick={() => navigate('/notice')}
-                      className="text-white text-3xl md:text-4xl font-bold cursor-pointer hover:text-blue-400 mb-5 transition duration-300"
-                    >
+                  <div className="bg-white/0 p-4 rounded-2xl text-white h-1/3">
+                    <h2 onClick={() => navigate('/notice')} className="text-3xl md:text-4xl font-bold cursor-pointer hover:text-blue-400 mb-5 transition duration-300">
                       공지사항
                     </h2>
                     <h3 className="text-xl font-bold mb-2">
                       수원대학교 지능형 SW 융합대학의 최신 소식을 한 눈에 확인하세요.
                     </h3>
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-2/3 mt-6">
                     {[notice1, notice2, notice3].map((notice, i) => (
                       <div
                         key={i}
-                        className="bg-white/15 text-white border-gray-200 text-black p-6 rounded-2xl shadow-md h-full"
+                        className="bg-white/15 text-white p-6 rounded-2xl shadow-md h-full cursor-pointer"
+                        onClick={() => {
+                          if (notice?.id) navigate(`/notice-detail/${notice.id}`);
+                        }}
                       >
                         <h3 className="text-xl font-bold mb-2">{['학부', '대학원', '취업'][i]}</h3>
                         <div className="mb-2">
@@ -220,13 +182,13 @@ const HomePage = () => {
               </div>
             </div>
 
-            {/* 공지 리스트 */}
             <div className="w-full">
               <ul className="space-y-2 text-sm text-gray-200">
                 {notice.map((item, index) => (
                   <li
                     key={index}
                     className="border-b border-white/30 flex justify-between px-4 py-2 rounded hover:bg-black hover:bg-opacity-20 hover:shadow-inner hover:-translate-y-[2px] transition duration-300 cursor-pointer"
+                    onClick={() => navigate(`/notice-detail/${item.id}`)}  // ✅ 클릭 시 이동
                   >
                     <span className="font-bold">{item.title}</span>
                     <span className="text-gray-400">{item.createdAt?.split('T')[0]}</span>
@@ -248,10 +210,10 @@ const HomePage = () => {
           {/* 카드 컨테이너 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
             {[
-              { title: '컴퓨터학부', link: '/departments/computer' },
-              { title: '정보통신학부', link: '/departments/ict' },
-              { title: '데이터과학부', link: '/departments/data' },
-              { title: '클라우드융복합', link: '/departments/cloud' },
+              { title: '컴퓨터학부', link: '/departments/computer/1' },
+              { title: '정보통신학부', link: '/departments/ict/3' },
+              { title: '데이터과학부', link: '/departments/data/5' },
+              { title: '클라우드융복합', link: '/departments/cloud/6' },
             ].map((dept, idx) => (
               <a
                 key={idx}

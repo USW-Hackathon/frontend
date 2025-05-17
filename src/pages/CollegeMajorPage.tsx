@@ -107,29 +107,31 @@ const CollegeMajorPage = () => {
     }
   };
 
-  const majorIdMap: Record<string, number> = {
-    computer: 1,
-    ict: 2,
-    data: 2,
-    cloud: 4,
-  };
-
   useEffect(() => {
     const path = location.pathname;
     const lastSegment = path.substring(path.lastIndexOf('/') + 1);
 
-    // 이미지 설정
     if (majorImages[lastSegment]) {
       setSelectedImage(majorImages[lastSegment]);
     } else {
       setSelectedImage(null);
     }
 
-    // 전공 상세 정보 불러오기
-    const majorId = majorIdMap[lastSegment];
-    if (majorId) {
-      fetchMajorDetail(majorId);
-    }
+    const fetchMajorIdByAlias = async () => {
+      try {
+        const res = await axios.get(`http://223.195.111.30:5062/major/${lastSegment}`);
+        const majorId = res.data?.id;
+        if (majorId) {
+          fetchMajorDetail(majorId);
+        } else {
+          console.warn('해당 별칭의 majorId를 찾을 수 없습니다:', lastSegment);
+        }
+      } catch (error) {
+        console.error('majorId 조회 실패:', error);
+      }
+    };
+
+    fetchMajorIdByAlias();
   }, [location.pathname]);
 
   useEffect(() => {
@@ -177,60 +179,42 @@ const CollegeMajorPage = () => {
             ))}
           </div>
 
+          {/* 소개 탭 */}
           {activeTab === '소개' && selectedMajor && (
             <div className="bg-white text-black p-6 rounded-xl shadow space-y-6">
               <h2 className="text-3xl font-bold text-blue-700">{selectedMajor.name} 전공 소개</h2>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">전공 개요</h3>
                 <p className="whitespace-pre-wrap text-gray-800">{selectedMajor.introduction}</p>
               </section>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">학과 위치 및 연락처</h3>
                 <ul className="text-gray-700 space-y-1">
-                  <li>
-                    <strong>위치:</strong> {selectedMajor.location}
-                  </li>
-                  <li>
-                    <strong>전화:</strong> {selectedMajor.phone}
-                  </li>
-                  <li>
-                    <strong>팩스:</strong> {selectedMajor.fax}
-                  </li>
-                  <li>
-                    <strong>근무시간:</strong> {selectedMajor.officeHours}
-                  </li>
+                  <li><strong>위치:</strong> {selectedMajor.location}</li>
+                  <li><strong>전화:</strong> {selectedMajor.phone}</li>
+                  <li><strong>팩스:</strong> {selectedMajor.fax}</li>
+                  <li><strong>근무시간:</strong> {selectedMajor.officeHours}</li>
                 </ul>
               </section>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">연구소 및 연구 프로젝트</h3>
                 <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.researchCenter}</p>
               </section>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">진로 및 자격증</h3>
                 <ul className="text-gray-800 list-disc pl-6">
-                  <li>
-                    <strong>진로:</strong> {selectedMajor.career}
-                  </li>
-                  <li>
-                    <strong>자격증:</strong> {selectedMajor.certifications}
-                  </li>
+                  <li><strong>진로:</strong> {selectedMajor.career}</li>
+                  <li><strong>자격증:</strong> {selectedMajor.certifications}</li>
                 </ul>
               </section>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">동아리 활동</h3>
                 <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.clubs}</p>
               </section>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">특화 프로그램</h3>
                 <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.specialPrograms}</p>
               </section>
-
               <section>
                 <h3 className="text-xl font-semibold mb-2">전공의 미래 전망</h3>
                 <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.future}</p>
@@ -238,6 +222,7 @@ const CollegeMajorPage = () => {
             </div>
           )}
 
+          {/* 교육과정 탭 */}
           {activeTab === '교육과정' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">학년별 교육과정</h2>
@@ -293,6 +278,7 @@ const CollegeMajorPage = () => {
             </div>
           )}
 
+          {/* 교과목 안내 탭 */}
           {activeTab === '교과목안내' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">{selectedImage?.label || '전공'} 교과목 안내</h2>
@@ -311,6 +297,7 @@ const CollegeMajorPage = () => {
             </div>
           )}
 
+          {/* 시설 안내 탭 */}
           {activeTab === '시설 안내' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">학과 시설 안내</h2>
