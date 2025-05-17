@@ -123,7 +123,7 @@ const NoticePage = () => {
             {notices.map(notice => (
               <li
                 key={notice.id}
-                onClick={() => navigate(`/notice/${notice.id}`)}
+                onClick={() => navigate(`/notice-detail/${notice.id}`)}
                 className="cursor-pointer py-6 hover:bg-gray-100 transition rounded-md px-4"
               >
                 <h2 className="text-xl font-semibold mb-1">{notice.title}</h2>

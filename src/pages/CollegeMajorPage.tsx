@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../components/Common/Header';
+import SubHeader from '@/components/SubHeader';
 
 interface College {
   id: number;
@@ -87,7 +88,7 @@ const CollegeMajorPage = () => {
           <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
         </div>
       </div>
-
+      <SubHeader />
       {/* 흰색 본문 영역 시작 */}
       <div className="w-full bg-white text-black">
         <div className="max-w-6xl mx-auto px-4 py-10">

@@ -17,22 +17,23 @@ const RouterProvider = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/notice/:category" element={<NoticePage />} />
+        <Route path="/notice-detail/:id" element={<NoticeDetailPage />} />
         <Route path="/side" element={<SidePage />} />
         <Route path="/api" element={<ApiTestPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/notice" element={<NoticePage />} />
-        <Route path="/notice/:category" element={<NoticePage />} />
-        <Route path="/about/location" element={<Location />} /> // 찾아오시는 길
-        <Route path="/about/professor" element={<ProfessorPage />} /> // 교수진
+        <Route path="/about/location" element={<Location />} />
+        <Route path="/about/professor" element={<ProfessorPage />} /> 
         <Route path="/about" element={<CollegeMajorPage />} />
-        <Route path="/board" element={<BoardPage />} />
+        <Route path="/board/:categry" element={<BoardPage />} />
         <Route path="/board-posts/write" element={<BoardWritePage />} />
-        <Route path="/board-posts/:category" element={<BoardDetailPage />} />
-        <Route path="/college-major" element={<CollegeMajorPage />} /> // 학부소개
-        <Route path="/departments/computer" element={<CollegeMajorPage />} /> // 컴퓨터학부
-        <Route path="/departments/ict" element={<CollegeMajorPage />} /> // 정보통신학부
-        <Route path="/departments/data" element={<CollegeMajorPage />} /> // 데이터과학부
-        <Route path="/departments/cloud" element={<CollegeMajorPage />} /> // 클라우드융복합 /about
+        <Route path="/board-posts/:id" element={<BoardDetailPage />} />
+        <Route path="/college-major" element={<CollegeMajorPage />} /> 
+        <Route path="/departments/computer" element={<CollegeMajorPage />} /> 
+        <Route path="/departments/ict" element={<CollegeMajorPage />} /> 
+        <Route path="/departments/data" element={<CollegeMajorPage />} />
+        <Route path="/departments/cloud" element={<CollegeMajorPage />} /> 
         {/* Add more routes here as needed */}
       </Routes>
     </Router>
