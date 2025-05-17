@@ -17,7 +17,7 @@ const menus = [
     label: '대학안내',
     children: [
       { name: '비전', path: '/about/vision' },
-      { name: '교수진', path: '/about/professor' },
+      { name: '교수진', path: '/about/professor/0' },
       { name: '찾아오시는 길', path: '/about/location' },
     ],
   },

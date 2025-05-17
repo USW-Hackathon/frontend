@@ -25,7 +25,7 @@ const RouterProvider = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/notice" element={<NoticePage />} />
         <Route path="/about/location" element={<Location />} />
-        <Route path="/about/professor" element={<ProfessorPage />} /> 
+        <Route path="/about/professor/:id" element={<ProfessorPage />} /> 
         <Route path="/about" element={<CollegeMajorPage />} />
         <Route path="/about/vision" element={<VisionPage />} />
         <Route path="/board/:categoryId" element={<BoardPage />} />

@@ -29,7 +29,17 @@ const menuMap: Record<string, MenuItem> = {
     value: 'about',
     sub: [
       { name: '비전', path: '/about/vision' },
-      { name: '교수진', path: '/about/professor' },
+      {
+        name: '교수진',
+        path: '/about/professor/0',
+        sub: [
+          { name: '전체', path: '/about/professor/0', value: 0 },
+          { name: '컴퓨터학부', path: '/about/professor/1', value: 1 },
+          { name: '정보통신학부', path: '/about/professor/2', value: 2 },
+          { name: '데이터과학부', path: '/about/professor/3', value: 3 },
+          { name: '클라우드융복합', path: '/about/professor/4', value: 4 },
+        ],
+      },
       { name: '찾아오시는 길', path: '/about/location' },
     ],
   },
@@ -40,30 +50,30 @@ const menuMap: Record<string, MenuItem> = {
         name: '컴퓨터학부',
         path: '/departments/computer/1',
         sub: [
-          { name: '컴퓨터 SW', path: '/departments/computer/1' ,value: 1},
-          { name: '미디어 SW', path: '/departments/computer/2' ,value: 2},
+          { name: '컴퓨터 SW', path: '/departments/computer/1', value: 1 },
+          { name: '미디어 SW', path: '/departments/computaer/2', value: 2 },
         ],
       },
       {
         name: '정보통신학부',
         path: '/departments/ict/3',
         sub: [
-          { name: '정보보호', path: '/departments/ict/3' ,value:3},
-          { name: '정보통신', path: '/departments/ict/4' ,value:4},
+          { name: '정보보호', path: '/departments/ict/3', value: 3 },
+          { name: '정보통신', path: '/departments/ict/4', value: 4 },
         ],
       },
       {
         name: '데이터과학부',
         path: '/departments/data/5',
         sub: [
-          { name: '데이터과학', path: '/departments/data/5',value:5 },
+          { name: '데이터과학', path: '/departments/data/5', value: 5 },
         ],
       },
       {
         name: '클라우드융복합',
         path: '/departments/cloud/6',
         sub: [
-          { name: '클라우드 ', path: '/departments/cloud/6' ,value:6}
+          { name: '클라우드 ', path: '/departments/cloud/6', value: 6 }
         ],
       },
     ],
@@ -111,37 +121,60 @@ const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderPro
   const [subSubOpen, setSubSubOpen] = useState(false);
 
   useEffect(() => {
-  const path = location.pathname;
-  const segments = path.split('/').filter(Boolean);
+    const path = location.pathname;
+    const segments = path.split('/').filter(Boolean);
 
-  if (segments[0] === 'departments') {
-    const mainKey = '학과/학부';
-    const deptGroup = `/departments/${segments[1]}`;
-    const fullPath = `/departments/${segments[1]}/${segments[2]}`;
+    // 1. 학과/학부 경로 처리
+    if (segments[0] === 'departments') {
+      const mainKey = '학과/학부';
+      const deptGroup = `/departments/${segments[1]}`;
+      const fullPath = `/departments/${segments[1]}/${segments[2]}`;
 
-    const subMenu = menuMap[mainKey].sub.find(item => item.path.startsWith(deptGroup));
-    const subSubMenu = subMenu?.sub?.find(item => item.path === fullPath);
+      const subMenu = menuMap[mainKey].sub.find(item => item.path.startsWith(deptGroup));
+      const subSubMenu = subMenu?.sub?.find(item => item.path === fullPath);
 
-    setMainCategory(mainKey);
-    if (subMenu) setSubCategory(subMenu);
-    if (subSubMenu) setSubSubCategory(subSubMenu);
-    return;
-  }
-
-  for (const [mainKey, { sub }] of Object.entries(menuMap)) {
-    const match = sub.find(item => path.startsWith(item.path));
-    if (match) {
       setMainCategory(mainKey);
-      setSubCategory(match);
-      setSubSubCategory(null);
+      if (subMenu) setSubCategory(subMenu);
+      if (subSubMenu) setSubSubCategory(subSubMenu);
       return;
     }
-  }
 
-  setMainCategory(fallbackMain);
-  setSubCategory(fallbackSub);
-  setSubSubCategory(null);
-}, [location.pathname, defaultMainCategory, defaultSubCategoryPath]);
+    // 2. 교수진 경로 처리
+    if (segments[0] === 'about' && segments[1] === 'professor') {
+      const mainKey = '대학안내';
+      const subMenu = menuMap[mainKey].sub.find(item => item.name === '교수진');
+      const fullPath = `/about/professor/${segments[2]}`;
+      const subSubMenu = subMenu?.sub?.find(item => item.path === fullPath);
+
+      setMainCategory(mainKey);
+      if (subMenu) setSubCategory(subMenu);
+      if (subSubMenu) setSubSubCategory(subSubMenu);
+      return;
+    }
+
+    // 3. 일반 메뉴 처리 (공지사항, 게시판 등)
+    for (const [mainKey, { sub }] of Object.entries(menuMap)) {
+      const exactMatch = sub.find(item => item.path === path);
+      if (exactMatch) {
+        setMainCategory(mainKey);
+        setSubCategory(exactMatch);
+        setSubSubCategory(null);
+        return;
+      }
+      const startsWithMatch = sub.find(item => path.startsWith(item.path));
+      if (startsWithMatch) {
+        setMainCategory(mainKey);
+        setSubCategory(startsWithMatch);
+        setSubSubCategory(null);
+        return;
+      }
+    }
+
+    // 4. fallback
+    setMainCategory(fallbackMain);
+    setSubCategory(fallbackSub);
+    setSubSubCategory(null);
+  }, [location.pathname, defaultMainCategory, defaultSubCategoryPath]);
 
 
   const handleMainSelect = (item: string) => {
@@ -258,7 +291,7 @@ const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderPro
           )}
         </div>
 
-        {mainCategory === '학과/학부' && subCategory.sub && (
+        {(mainCategory === '학과/학부' || subCategory.name === '교수진') && subCategory.sub && (
           <>
             <div className="h-6 border-l border-white"></div>
             <div className="relative">

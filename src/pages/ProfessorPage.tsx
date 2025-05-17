@@ -3,13 +3,14 @@ import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
 import SubHeader from '../components/SubHeader';
 import MarqueeBanner from '@/components/MarqueeBanner';
+import { useLocation } from 'react-router-dom';
 import Footer from '@/components/Footer';
- 
+
 
 interface Professor {
   id: number;
   name: string;
-  division: string;
+  division: number;
   majorName: string;
   research: string;
   email: string;
@@ -18,34 +19,26 @@ interface Professor {
   imageUrl?: string | null;
 }
 
-const divisionOptions = [
-  { label: '전체', value: '0' },
-  { label: '컴퓨터학부', value: '1' },
-  { label: '정보통신학부', value: '2' },
-  { label: '데이터과학부', value: '3' },
-  { label: '클라우드융복합', value: '4' },
-];
-
-const majorOptionsByDivision: Record<string, Array<{ label: string; value: string }>> = {
-  '0': [{ label: '전체', value: '0' }],
-  '1': [
-    { label: '전체', value: '0' },
-    { label: '컴퓨터SW', value: '1' },
-    { label: '미디어SW', value: '2' },
-  ],
-  '2': [
-    { label: '전체', value: '0' },
-    { label: '정보보호', value: '3' },
-    { label: '정보통신', value: '4' },
-  ],
-  '3': [{ label: '전체', value: '0' },{ label: '데이터과학', value: '5' }],
-  '4': [{ label: '전체', value: '0' },{ label: '클라우드융복합', value: '6' }],
+const majorMap: Record<string, string> = {
+  '0': '컴퓨터SW',
+  '1': '미디어SW',
+  '2': '정보보호',
+  '3': '정보통신',
+  '4': '데이터과학부',
+  '5': '클라우드융복합',
 };
 
+
 const ProfessorPage = () => {
-  const [division, setDivision] = useState('0');
-  const [major, setMajor] = useState('0');
+  const location = useLocation();
   const [professors, setProfessors] = useState<Professor[]>([]);
+
+  // 경로에서 division 값을 추출
+  const divisionFromPath = location.pathname.split('/').pop() || '0';
+  const division = parseInt(divisionFromPath, 10);
+
+  // major는 고정값 '0' 사용
+  const major = '0';
 
   const fetchProfessors = async () => {
     try {
@@ -58,14 +51,8 @@ const ProfessorPage = () => {
 
   useEffect(() => {
     fetchProfessors();
-  }, [division, major]);
+  }, [division]);
 
-  const availableMajorOptions = division ? majorOptionsByDivision[division] || [] : [];
-
-  const handleDivisionChange = (value: string) => {
-    setDivision(value);
-    setMajor('0');
-  };
 
   return (
     <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
@@ -105,8 +92,9 @@ const ProfessorPage = () => {
                 {/* 왼쪽: 교수 정보 */}
                 <div className="flex-1">
                   <h2 className="text-xl font-extrabold text-[#003670] mb-1">{professor.name}</h2>
-                  <p className="text-sm text-gray-600 mb-4">{professor.majorName}</p>
-
+                  <p className="text-sm text-gray-600 mb-4">
+                    {majorMap[professor.majorName] || professor.majorName}
+                  </p>
                   <div className="space-y-1 text-sm text-gray-700 leading-relaxed">
                     <p>
                       <span className="font-semibold">연구실:</span> {professor.lab || '-'}
