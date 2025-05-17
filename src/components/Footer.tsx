@@ -10,13 +10,13 @@ const Footer = () => {
           <div className="flex justify-center md:justify-start items-center gap-3">
             <div className="text-2xl">
               <img
-                src="https://www.suwon.ac.kr/usr/images/suwon/mascot11@4x.png"
+                src="https://www.suwon.ac.kr/usr/images/suwon/mascot15@4x.png"
                 alt="Suwon University mascot"
                 className="w-20 opacity-100"
               />
             </div>
             <p>
-              <span className="block">18322</span>
+              <span className="block">18323</span>
               경기도 화성시 봉담읍 와우안길 17<br />
               수원대학교
             </p>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
+import Footer from '@/components/footer';
 
 interface Professor {
   id: number;
