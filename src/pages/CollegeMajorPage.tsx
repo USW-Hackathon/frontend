@@ -40,6 +40,8 @@ const CollegeMajorPage = () => {
   const [activeTab, setActiveTab] = useState('소개');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [floorTab, setFloorTab] = useState('1F');
+  const [selectedGrade, setSelectedGrade] = useState<number>(1);
+  const [courseList, setCourseList] = useState<any[]>([]);
 
   const floorImages: Record<string, string> = {
     '1F': ict1F,
@@ -68,9 +70,26 @@ const CollegeMajorPage = () => {
     }
   };
 
+  const fetchCourses = async (grade: number) => {
+    try {
+      const res = await axios.get(`http://223.195.111.30:5062/course`, {
+        params: { majorId: selectedCollegeId, grade },
+      });
+      setCourseList(res.data.courses);
+    } catch (err) {
+      console.error('교과과정 불러오기 실패:', err);
+    }
+  };
+
   useEffect(() => {
     fetchCollegeData(selectedCollegeId);
   }, [selectedCollegeId]);
+
+  useEffect(() => {
+    if (activeTab === '교육과정') {
+      fetchCourses(selectedGrade);
+    }
+  }, [selectedGrade, activeTab]);
 
   const toggleDropdown = (target: string) => {
     setOpenDropdown(prev => (prev === target ? null : target));
@@ -80,7 +99,6 @@ const CollegeMajorPage = () => {
     <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
       <Header />
 
-      {/* 타이틀 */}
       <div className="relative h-[480px] bg-[#0d0d1a] overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-end pr-12">
           <img
@@ -94,20 +112,15 @@ const CollegeMajorPage = () => {
         </div>
       </div>
 
-      {/* 마퀴 배너 */}
       <div className="bg-[#148cb1] overflow-hidden whitespace-nowrap h-20 flex items-center">
         <div className="animate-marquee whitespace-nowrap inline-block">
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
           <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
         </div>
       </div>
       <SubHeader />
 
-      {/* 흰색 본문 영역 시작 */}
       <div className="w-full bg-white text-black">
         <div className="max-w-6xl mx-auto px-4 py-10">
-          {/* 탭 메뉴 */}
           <div className="flex space-x-4 border-b mb-6">
             {tabs.map(tab => (
               <button
@@ -122,7 +135,6 @@ const CollegeMajorPage = () => {
             ))}
           </div>
 
-          {/* 콘텐츠 영역 */}
           {activeTab === '소개' && college && (
             <div className="bg-gray-50 p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-2">{college.name}</h2>
@@ -163,12 +175,65 @@ const CollegeMajorPage = () => {
             </div>
           )}
 
+          {activeTab === '교육과정' && (
+            <div className="bg-white text-black p-6 rounded-xl shadow">
+              <h2 className="text-2xl font-bold mb-4">학년별 교육과정</h2>
+              <div className="flex space-x-2 mb-4">
+                {[1, 2, 3, 4].map(grade => (
+                  <button
+                    key={grade}
+                    onClick={() => setSelectedGrade(grade)}
+                    className={`px-4 py-2 rounded-md font-semibold ${
+                      selectedGrade === grade ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {grade}학년
+                  </button>
+                ))}
+              </div>
+              <div className="overflow-auto">
+                <table className="w-full table-auto border border-gray-300 text-sm">
+                  <thead className="bg-gray-100 text-gray-700">
+                    <tr>
+                      <th className="border p-2">학기</th>
+                      <th className="border p-2">과목코드</th>
+                      <th className="border p-2">과목명</th>
+                      <th className="border p-2">이수구분</th>
+                      <th className="border p-2">학점</th>
+                      <th className="border p-2">이론시수</th>
+                      <th className="border p-2">실습시수</th>
+                      <th className="border p-2">교과구분</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {courseList.length > 0 ? (
+                      courseList.map(course => (
+                        <tr key={course.id} className="text-center">
+                          <td className="border p-2">{course.semester}</td>
+                          <td className="border p-2">{course.subjectCode}</td>
+                          <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
+                          <td className="border p-2">{course.completionType}</td>
+                          <td className="border p-2">{course.credit}</td>
+                          <td className="border p-2">{course.theoryHours}</td>
+                          <td className="border p-2">{course.practiceHours}</td>
+                          <td className="border p-2">{course.courseType}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={8} className="border p-4 text-center text-gray-500">데이터가 없습니다.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
           {activeTab === '시설 안내' && (
             <div className="bg-white text-black p-6 rounded-xl shadow">
               <h2 className="text-2xl font-bold mb-4">학과 시설 안내</h2>
               <p className="text-gray-700 mb-6">지능형SW융합대학의 층별 시설 도식도를 확인할 수 있습니다.</p>
-
-              {/* 층 탭 */}
               <div className="flex space-x-2 mb-4">
                 {['1F', '2F', '3F', '4F', '5F'].map(floor => (
                   <button
@@ -182,17 +247,11 @@ const CollegeMajorPage = () => {
                   </button>
                 ))}
               </div>
-
-              {/* 이미지 표시 */}
               <div className="overflow-auto border rounded-lg p-2">
                 <img src={floorImages[floorTab]} alt={`${floorTab} 도식도`} className="w-full h-auto object-contain" />
               </div>
             </div>
           )}
-
-          {activeTab === '교수진' && <div>💡 교수진 목록 컴포넌트 삽입 예정</div>}
-          {activeTab === '교육과정' && <div>💡 교육과정 목록 컴포넌트 삽입 예정</div>}
-          {activeTab === '교과목안내' && <div>💡 교과목 리스트 API 기반 출력 예정</div>}
         </div>
       </div>
 
