@@ -9,6 +9,7 @@ import NoticeDetailPage from '../pages/NoticeDetailPage';
 import BoardPage from '../pages/BoardPage';
 import BoardWritePage from '../pages/BoardWritePage';
 import BoardDetailPage from '../pages/BoardDetailPage';
+import ProfessorPage  from '../pages/ProfessorPage';
 
 const RouterProvider = () => {
   return (
@@ -24,6 +25,7 @@ const RouterProvider = () => {
         <Route path="/board" element={<BoardPage />} />
         <Route path="/board-posts/write" element={<BoardWritePage />} />
         <Route path="/board-posts/:id" element={<BoardDetailPage />} />
+        <Route path="/professor" element={<ProfessorPage />} />
         {/* Add more routes here as needed */}
       </Routes>
     </Router>
