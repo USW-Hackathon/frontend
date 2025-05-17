@@ -142,7 +142,7 @@ const BoardDetailPage = () => {
             className={`flex items-center gap-2 py-1 text-sm text-gray-800 ${
               nextPost ? 'cursor-pointer hover:text-blue-600' : ''
             }`}
-            onClick={() => nextPost && navigate(`/board/${nextPost.id}`)}
+            onClick={() => nextPost && navigate(`/board-posts/${nextPost.id}`)}
           >
             <span className="font-bold">다음글</span>
             <span className="text-lg">⏷</span>
@@ -154,7 +154,7 @@ const BoardDetailPage = () => {
           <div className="flex gap-2 mt-12">
             <button
               type="button"
-              onClick={() => navigate('/board')}
+              onClick={() => navigate('/board/1')}
               className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
             >
               목록으로 돌아가기
