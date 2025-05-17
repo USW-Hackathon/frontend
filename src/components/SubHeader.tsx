@@ -51,7 +51,7 @@ const menuMap: Record<string, MenuItem> = {
         path: '/departments/computer/1',
         sub: [
           { name: '컴퓨터 SW', path: '/departments/computer/1', value: 1 },
-          { name: '미디어 SW', path: '/departments/computaer/2', value: 2 },
+          { name: '미디어 SW', path: '/departments/computer/2', value: 2 },
         ],
       },
       {
