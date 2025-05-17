@@ -12,6 +12,7 @@ import info from '@/assets/info.png';
 import infot from '@/assets/infot.png';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
+import MarqueeBanner from '@/components/MarqueeBanner';
 
 interface College {
   id: number;
@@ -159,11 +160,7 @@ const CollegeMajorPage = () => {
           <h1 className="text-5xl font-extrabold">학과/학부</h1>
         </div>
       </div>
-      <div className="bg-[#148cb1] overflow-hidden whitespace-nowrap h-20 flex items-center">
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-        </div>
-      </div>
+      <MarqueeBanner />
       <SubHeader />
       <div className="w-full bg-white text-black">
         <div className="max-w-6xl mx-auto px-4 py-10">

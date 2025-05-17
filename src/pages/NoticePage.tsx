@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
 import SubHeader from '@/components/SubHeader'
+import MarqueeBanner from '@/components/MarqueeBanner';
 
 interface Notice {
   id: number;
@@ -89,13 +90,7 @@ const NoticePage = () => {
       </div>
 
       {/* 마퀴 배너 */}
-      <div className="bg-[#148cb1] overflow-hidden whitespace-nowrap h-20 flex items-center">
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-        </div>
-      </div>
+      <MarqueeBanner />
       <SubHeader />
       {/* 아래 전체 영역 흰색으로 */}
       <div className="w-full bg-white text-black">

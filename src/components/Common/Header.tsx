@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { logout } from '@/api/auth/logout';
 import { getCookie } from '@/utils/cookies';
+import MarqueeBanner from '@/components/MarqueeBanner';
 
 const handleLogout = async () => {
   await logout();
@@ -81,7 +82,7 @@ export default function Header() {
             <img
               src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
               alt="로고"
-              className="h-[44px] object-contain ml-0"
+              className="h-[60px] object-contain ml-0"
             />
             <div className="flex flex-col justify-center leading-[1.05] transform -translate-y-[1px]">
               <span className="text-[22px] font-extrabold text-white whitespace-nowrap mb-[8px]">지능형SW융합대학</span>
