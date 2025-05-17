@@ -3,6 +3,13 @@ import { useEffect, useState } from 'react';
 import { Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '@/utils/cookies';
+import { logout } from '@/api/auth/logout';
+
+
+const handleLogout = async () => {
+  await logout(); // 쿠키 삭제 및 서버 요청
+  window.location.reload(); // 상태 반영을 위해 새로고침
+};
 
 // 네비게이션 메뉴 목록
 const menus = [
@@ -50,9 +57,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
-        isHidden ? '-translate-y-full' : 'translate-y-0'
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -95,7 +101,11 @@ export default function Header() {
             </span>
           ) : (
             <span className="text-sm font-semibold text-blue-400">
-              {userName}
+              <div>
+                <span>{userName} </span>
+                <span>/</span>
+                <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
+              </div>
             </span>
           )}
         </div>
@@ -119,9 +129,8 @@ export default function Header() {
 
       {/* 데스크탑 하위 메뉴 (hover 시 확장) */}
       <div
-        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${
-          isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
-        }`}
+        className={`hidden lg:grid grid-cols-[1.8fr_1fr_1fr_1fr_1fr_0.8fr] w-full bg-[#0d0d1a] border-t border-white/30 transition-all duration-500 ease-in-out overflow-hidden ${isHovering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'
+          }`}
       >
         <div></div>
         {menus.map((menu, index) => (
@@ -159,7 +168,11 @@ export default function Header() {
                   로그인
                 </span>
               ) : (
-                <span>{userName}</span>
+                <div>
+                  <span>{userName}</span>
+                  <span>/</span>
+                <span className="cursor-pointer hover:text-blue-300" onClick={handleLogout}> logout</span>
+                </div>
               )}
             </div>
           </div>
