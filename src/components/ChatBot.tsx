@@ -37,73 +37,74 @@ export default function ChatBot() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const newMessages: ChatMessage[] = [...messages, {
-      role: 'user', content: input, time: new Date().toLocaleTimeString('ko-KR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      })
-    }];
+    const timeNow = new Date().toLocaleTimeString('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
 
-    setMessages(newMessages);
-    saveMessages(newMessages);
+    const userMessage: ChatMessage = {
+      role: 'user',
+      content: input,
+      time: timeNow,
+    };
+
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    saveMessages(updatedMessages);
     setInput('');
     setLoading(true);
 
-    const fullMessages = [
-      {
-        role: 'system',
-        content: `
-너는 수원대학교 컴퓨터SW전공 정보를 안내하는 전용 챗봇이다.
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lastMessage: input }),
+      });
 
-너는 감정, 의도, 추론 능력이 없으며, 오직 사용자 질문에 대해 **주어진 정보(gptData)**만을 기반으로 정확하고 간결하게 응답해야 한다.
+      if (!res.ok) throw new Error('GPT 서버 응답 오류');
 
-사용자의 질문이 아래 정보와 직접적으로 관련되지 않을 경우, 반드시 다음과 같이 응답하라:
-"죄송합니다. 해당 질문은 제가 알고 있는 정보 범위를 벗어납니다."
+      const reply = await res.text(); // 또는 json().message 형태도 가능
 
+      let i = 0;
+      typingBuffer.current = '';
+      setTypingMessage('');
 
+      const interval = setInterval(() => {
+        if (i >= reply.length) {
+          clearInterval(interval);
 
-아래는 너에게 제공된 유일한 정보다. 반드시 이 정보만을 기반으로 마크다운(Markdown) 형식으로 답변하라:
-====================
-
-====================
-    `,
-      },
-      ...newMessages,
-    ];
-
-    let i = 0;
-    typingBuffer.current = '';
-    setTypingMessage('');
-
-    const interval = setInterval(() => {
-      if (i >= reply.length) {
-        clearInterval(interval);
-        setMessages(prev => {
-          const updated = [...prev, {
-            role: 'assistant' as const, content: reply, time: new Date().toLocaleTimeString('ko-KR', {
+          const assistantMessage: ChatMessage = {
+            role: 'assistant',
+            content: reply,
+            time: new Date().toLocaleTimeString('ko-KR', {
               hour: '2-digit',
               minute: '2-digit',
               hour12: false,
-            })
-          }];
-          saveMessages(updated);
-          return updated;
-        });
-        setTypingMessage('');
-        setLoading(false);
-        return;
-      }
+            }),
+          };
 
-      // ✅ 버퍼에 추가하고, 그걸 보여줌
-      typingBuffer.current += reply[i];
-      setTypingMessage(typingBuffer.current);
-      i++;
-    }, 30);
+          const finalMessages = [...updatedMessages, assistantMessage];
+          setMessages(finalMessages);
+          saveMessages(finalMessages);
+          setTypingMessage('');
+          setLoading(false);
+          return;
+        }
+
+        typingBuffer.current += reply[i];
+        setTypingMessage(typingBuffer.current);
+        i++;
+      }, 30);
+    } catch (err) {
+      console.error('GPT 호출 실패:', err);
+      setTypingMessage('⚠️ GPT 응답에 실패했습니다.');
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 border rounded shadow" >
+    <div className="max-w-md mx-auto p-4 border rounded shadow">
       <div className="h-[500px] overflow-y-auto space-y-2 mb-4">
         {messages.map((msg, i) => (
           <div key={i} className="flex flex-col gap-1">
@@ -118,16 +119,14 @@ export default function ChatBot() {
                 </div>
               )}
               <div
-                className={`p-2 rounded whitespace-pre-wrap max-w-[70%] text-left
-          ${msg.role === 'user'
-                    ? 'bg-blue-100'
-                    : 'bg-gray-100'
-                  }`}
+                className={`p-2 rounded whitespace-pre-wrap max-w-[70%] text-left ${
+                  msg.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'
+                }`}
               >
                 {msg.content}
               </div>
             </div>
-            <div className={`text-xs text-gray-500 pl-12`}>
+            <div className="text-xs text-gray-500 pl-12">
               {msg.time}
             </div>
           </div>
@@ -156,12 +155,13 @@ export default function ChatBot() {
         <button
           onClick={handleSend}
           disabled={loading}
-          className={`px-4 py-2 rounded text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-            }`}
+          className={`px-4 py-2 rounded text-white ${
+            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+          }`}
         >
           전송
         </button>
       </div>
-    </div >
+    </div>
   );
 }
