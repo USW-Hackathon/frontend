@@ -1,5 +1,6 @@
 import vision from '@/assets/vision.png';
 import Header from '../components/Common/Header';
+import SubHeader from '../components/SubHeader';
 
 const VisionPage = () => {
   return (
@@ -28,6 +29,7 @@ const VisionPage = () => {
           <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
         </div>
       </div>
+      <SubHeader />
 
       {/* Vision and Ideal Talent */}
       <div className="w-full bg-white text-black pt-14 pb-14 px-4 flex flex-col items-center text-center">

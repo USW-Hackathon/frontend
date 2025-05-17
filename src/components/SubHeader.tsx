@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronDown, Home } from 'lucide-react';
 
+interface SubHeaderProps {
+  defaultMainCategory?: string;
+  defaultSubCategoryPath?: string;
+}
+
 const menuMap: Record<
   string,
   {
@@ -13,7 +18,7 @@ const menuMap: Record<
     value: 'about',
     sub: [
       { name: '비전', path: '/about/vision' },
-      { name: '교수진', path: '/about/professors' },
+      { name: '교수진', path: '/about/professor' },
       { name: '찾아오시는 길', path: '/about/location' },
     ],
   },
@@ -46,20 +51,34 @@ const menuMap: Record<
   },
 };
 
-const SubHeader = () => {
+const SubHeader = ({ defaultMainCategory, defaultSubCategoryPath }: SubHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const defaultMain = Object.keys(menuMap)[0];
-  const defaultSub = menuMap[defaultMain].sub[0];
+  const fallbackMain = Object.keys(menuMap)[0];
+  const fallbackSub = menuMap[fallbackMain].sub[0];
 
-  const [mainCategory, setMainCategory] = useState(defaultMain);
-  const [subCategory, setSubCategory] = useState(defaultSub);
+  const resolvedMain = defaultMainCategory || fallbackMain;
+  const resolvedSub =
+    (defaultMainCategory &&
+      defaultSubCategoryPath &&
+      menuMap[defaultMainCategory]?.sub.find(item => item.path === defaultSubCategoryPath)) ||
+    fallbackSub;
+
+  const [mainCategory, setMainCategory] = useState(resolvedMain);
+  const [subCategory, setSubCategory] = useState(resolvedSub);
 
   const [mainOpen, setMainOpen] = useState(false);
   const [subOpen, setSubOpen] = useState(false);
 
   useEffect(() => {
+    if (defaultMainCategory && defaultSubCategoryPath) {
+      setMainCategory(defaultMainCategory);
+      const sub = menuMap[defaultMainCategory].sub.find(item => item.path === defaultSubCategoryPath);
+      if (sub) setSubCategory(sub);
+      return;
+    }
+
     const path = location.pathname;
 
     for (const [mainKey, { sub }] of Object.entries(menuMap)) {
@@ -71,9 +90,9 @@ const SubHeader = () => {
       }
     }
 
-    setMainCategory(defaultMain);
-    setSubCategory(defaultSub);
-  }, [location.pathname]);
+    setMainCategory(fallbackMain);
+    setSubCategory(fallbackSub);
+  }, [location.pathname, defaultMainCategory, defaultSubCategoryPath]);
 
   const handleMainSelect = (item: string) => {
     const firstSub = menuMap[item].sub[0];
@@ -92,8 +111,8 @@ const SubHeader = () => {
   };
 
   const handleHome = () => {
-    setMainCategory(defaultMain);
-    setSubCategory(defaultSub);
+    setMainCategory(fallbackMain);
+    setSubCategory(fallbackSub);
     setMainOpen(false);
     setSubOpen(false);
     navigate('/');

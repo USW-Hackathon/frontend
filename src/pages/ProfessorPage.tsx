@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
-import Footer from '@/components/footer';
+import SubHeader from '../components/SubHeader';
 
 interface Professor {
   id: number;
@@ -95,47 +95,8 @@ const ProfessorPage = () => {
           </span>
         </div>
       </div>
-      {/* 필터 드롭다운 */}
-      <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-4 justify-center items-center">
-        {/* 상위 드롭다운 */}
-        <select
-          className="border border-gray-300 rounded-md p-2 text-black bg-white shadow-sm focus:ring-2 focus:ring-[#003670]"
-          value={division}
-          onChange={e => handleDivisionChange(e.target.value)}
-        >
-          <option value={division} disabled hidden>
-            {divisionOptions.find(d => d.value === division)?.label || '전체'}
-          </option>
-          {divisionOptions
-            .filter(d => d.value !== division)
-            .map(d => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-        </select>
+      <SubHeader />
 
-        {/* 하위 드롭다운 */}
-        <select
-          className="border border-gray-300 rounded-md p-2 text-black bg-white shadow-sm focus:ring-2 focus:ring-[#003670]"
-          value={major}
-          onChange={e => setMajor(e.target.value)}
-          disabled={!division}
-        >
-          <option value={major} disabled hidden>
-            {major === '0'
-              ? '전체'
-              : availableMajorOptions.find(m => m.value === major)?.label || '선택'}
-          </option>
-          {availableMajorOptions
-            .filter(m => m.value !== major)
-            .map(m => (
-              <option key={m.value} value={m.value}>
-                {m.label}
-              </option>
-            ))}
-        </select>
-      </div>
 
 
       {/* 교수 카드 리스트 */}

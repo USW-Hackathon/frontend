@@ -1,6 +1,7 @@
 // src/pages/Location.tsx
 import { useEffect, useRef } from 'react';
 import Header from '../components/Common/Header';
+import SubHeader from '../components/SubHeader';
 
 declare global {
   interface Window {
@@ -164,6 +165,7 @@ const Location = () => {
           ))}
         </div>
       </div>
+      <SubHeader />
 
       <div className="w-full bg-white text-black">
         <div className="max-w-5xl mx-auto px-4 py-12">

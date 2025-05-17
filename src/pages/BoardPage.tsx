@@ -92,20 +92,6 @@ const BoardPage = () => {
       <div className="w-full bg-white text-black">
         {/* 카테고리 탭 */}
         <div className="max-w-4xl mx-auto px-4 pt-12 flex justify-between items-center">
-          <div className="flex space-x-2 border-b border-gray-300">
-            {categories.map(cat => (
-              <button
-                key={cat.value}
-                onClick={() => handleCategoryChange(cat.value)}
-                className={`px-4 py-2 text-sm font-semibold rounded-t-md transition ${categoryId === cat.value
-                    ? 'bg-black text-white border-l border-t border-r border-black'
-                    : 'text-black hover:text-gray-500'
-                  }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
 
           {/* 글쓰기 버튼 */}
           <button
