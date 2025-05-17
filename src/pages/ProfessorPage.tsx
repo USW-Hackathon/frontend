@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getProfessor } from '../api/professor';
 import Header from '../components/Common/Header';
+import Footer from '＠/components/Footer';
 
 interface Professor {
   id: number;
@@ -166,22 +167,17 @@ const ProfessorPage = () => {
             )}
           </div>
         </div>
+        ＜Footer ／＞
 
-        {/* 푸터 */}
-        <footer className="bg-[#003670] text-white py-4">
-          <div className="max-w-7xl mx-auto text-center">
-            <p>© 2024 USW. All rights reserved.</p>
-          </div>
-        </footer>
-
-        
-       <style>{`
+      {/* marquee 애니메이션 스타일 */}
+      <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-100%); }
         }
         .animate-marquee {
           animation: marquee 150s linear infinite;
+          
         }
       `}</style>
     </div>
