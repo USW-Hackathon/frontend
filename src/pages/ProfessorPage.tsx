@@ -15,7 +15,7 @@ interface Professor {
 }
 
 const divisionOptions = [
-  { label: '전체', value: '' },
+  { label: '전체', value: '0' },
   { label: '컴퓨터학부', value: '1' },
   { label: '정보통신학부', value: '2' },
   { label: '데이터과학부', value: '3' },
@@ -23,6 +23,7 @@ const divisionOptions = [
 ];
 
 const majorOptionsByDivision: Record<string, Array<{ label: string; value: string }>> = {
+  '0': [{ label: '전체', value: '0' }],
   '1': [
     { label: '컴퓨터SW', value: '1' },
     { label: '미디어SW', value: '2' },
@@ -36,10 +37,9 @@ const majorOptionsByDivision: Record<string, Array<{ label: string; value: strin
 };
 
 const ProfessorPage = () => {
-  const [division, setDivision] = useState('');
-  const [major, setMajor] = useState('');
+  const [division, setDivision] = useState('0');
+  const [major, setMajor] = useState('0');
   const [professors, setProfessors] = useState<Professor[]>([]);
-
 
   const fetchProfessors = async () => {
     try {
@@ -62,10 +62,9 @@ const ProfessorPage = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
       <Header />
-      <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
-        {/* 상단 영역 */}
+        {/* 타이틀 영역 */}
         <div className="relative h-[480px] bg-[#0d0d1a] overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-end pr-12">
             <img
@@ -76,7 +75,6 @@ const ProfessorPage = () => {
           </div>
           <div className="relative z-10 text-center pt-60">
             <h1 className="text-5xl font-extrabold">교수 소개</h1>
-            <p className="text-lg text-gray-300 mt-4">지능형SW융합대학 교수진을 소개합니다.</p>
           </div>
         </div>
 
@@ -94,15 +92,14 @@ const ProfessorPage = () => {
             </span>
           </div>
         </div>
-
         {/* 필터 드롭다운 */}
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-4 justify-center items-center">
           <select
             className="border border-gray-300 rounded-md p-2 text-black bg-white shadow-sm focus:ring-2 focus:ring-[#003670]"
             value={division}
-            onChange={(e) => handleDivisionChange(e.target.value)}
+            onChange={e => handleDivisionChange(e.target.value)}
           >
-            {divisionOptions.map((d) => (
+            {divisionOptions.map(d => (
               <option key={d.value} value={d.value}>
                 {d.label}
               </option>
@@ -112,11 +109,11 @@ const ProfessorPage = () => {
           <select
             className="border border-gray-300 rounded-md p-2 text-black bg-white shadow-sm focus:ring-2 focus:ring-[#003670]"
             value={major}
-            onChange={(e) => setMajor(e.target.value)}
+            onChange={e => setMajor(e.target.value)}
             disabled={!division}
           >
-            <option value="">전체</option>
-            {availableMajorOptions.map((m) => (
+            <option value="0">전체</option>
+            {availableMajorOptions.map(m => (
               <option key={m.value} value={m.value}>
                 {m.label}
               </option>
@@ -130,7 +127,7 @@ const ProfessorPage = () => {
             {professors.length === 0 ? (
               <p className="col-span-full text-center text-gray-500">해당 조건에 맞는 교수가 없습니다.</p>
             ) : (
-              professors.map((professor) => (
+              professors.map(professor => (
                 <div
                   key={professor.id}
                   className="bg-gradient-to-br from-[#e6f0fa] to-[#f9fbfd] rounded-2xl shadow-md p-6 border border-gray-100
@@ -142,9 +139,15 @@ const ProfessorPage = () => {
                     <p className="text-sm text-gray-600 mb-4">{professor.majorName}</p>
 
                     <div className="space-y-1 text-sm text-gray-700 leading-relaxed">
-                      <p><span className="font-semibold">연구실:</span> {professor.lab || '-'}</p>
-                      <p><span className="font-semibold">이메일:</span> {professor.email || '-'}</p>
-                      <p><span className="font-semibold">전화번호:</span> {professor.phone || '-'}</p>
+                      <p>
+                        <span className="font-semibold">연구실:</span> {professor.lab || '-'}
+                      </p>
+                      <p>
+                        <span className="font-semibold">이메일:</span> {professor.email || '-'}
+                      </p>
+                      <p>
+                        <span className="font-semibold">전화번호:</span> {professor.phone || '-'}
+                      </p>
                     </div>
                   </div>
 
@@ -170,10 +173,9 @@ const ProfessorPage = () => {
             <p>© 2024 USW. All rights reserved.</p>
           </div>
         </footer>
-      </div>
 
-      {/* marquee 애니메이션 스타일 */}
-      <style>{`
+        
+       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-100%); }
@@ -182,7 +184,7 @@ const ProfessorPage = () => {
           animation: marquee 150s linear infinite;
         }
       `}</style>
-    </>
+    </div>
   );
 };
 
