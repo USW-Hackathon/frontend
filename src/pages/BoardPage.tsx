@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getAllBoardPost } from '../api/boardPost';
 import Header from '../components/Common/Header';
 
@@ -24,18 +24,17 @@ const categories = [
 const BoardPage = () => {
   const [posts, setPosts] = useState<BoardPost[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const selectedCategory = searchParams.get('category') || '0';
+  const { categoryId = '0' } = useParams();
   const page = Number(searchParams.get('page') || 1);
   const size = 10;
 
   const fetchBoardPosts = async () => {
     try {
       const query: any = { page, size };
-      if (selectedCategory !== '0') {
-        query.categoryId = Number(selectedCategory);
+      if (categoryId !== '0') {
+        query.categoryId = Number(categoryId);
       }
 
       const res = await getAllBoardPost(query);
@@ -49,14 +48,14 @@ const BoardPage = () => {
   useEffect(() => {
     fetchBoardPosts();
     window.scrollTo({ top: 300, behavior: 'smooth' });
-  }, [selectedCategory, page]);
+  }, [categoryId, page]);
 
   const handleCategoryChange = (value: string) => {
-    setSearchParams({ category: value, page: '1' });
+    navigate(`/board/${value}?page=1`);
   };
 
   const handlePageChange = (newPage: number) => {
-    setSearchParams({ category: selectedCategory, page: String(newPage) });
+    navigate(`/board/${categoryId}?page=${newPage}`);
   };
 
   return (
@@ -96,7 +95,7 @@ const BoardPage = () => {
                 key={cat.value}
                 onClick={() => handleCategoryChange(cat.value)}
                 className={`px-4 py-2 text-sm font-semibold rounded-t-md transition ${
-                  selectedCategory === cat.value
+                  categoryId === cat.value
                     ? 'bg-black text-white border-l border-t border-r border-black'
                     : 'text-black hover:text-gray-500'
                 }`}
