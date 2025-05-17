@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllNotice, getCategoryNotice, getNotice } from '../api/notice';
 import Header from '../components/Common/Header'; // 헤더 컴포넌트
+import { useForm } from 'react-hook-form';
+import useLogin from '@/hooks/useLogin';
+import Footer from '@/components/Footer';
 
 interface Notice {
   id: number;
@@ -303,6 +306,9 @@ const HomePage = () => {
           </div>
         </section>
       </div>
+      <section className="h-auto snap-start">
+      <Footer />
+      </section>
     </div>
   );
 };
