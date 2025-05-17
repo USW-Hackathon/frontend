@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import com from '@/assets/com.png';
 import data from '@/assets/data.png';
 import ict1F from '@/assets/ict_1F.png';
@@ -107,6 +107,31 @@ const CollegeMajorPage = () => {
     }
   };
 
+  const majorIdMap: Record<string, number> = {
+    computer: 1,
+    ict: 2,
+    data: 2,
+    cloud: 4,
+  };
+
+  useEffect(() => {
+    const path = location.pathname;
+    const lastSegment = path.substring(path.lastIndexOf('/') + 1);
+
+    // 이미지 설정
+    if (majorImages[lastSegment]) {
+      setSelectedImage(majorImages[lastSegment]);
+    } else {
+      setSelectedImage(null);
+    }
+
+    // 전공 상세 정보 불러오기
+    const majorId = majorIdMap[lastSegment];
+    if (majorId) {
+      fetchMajorDetail(majorId);
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     fetchCollegeData(selectedCollegeId);
   }, [selectedCollegeId]);
@@ -117,22 +142,16 @@ const CollegeMajorPage = () => {
     }
   }, [selectedGrade, activeTab]);
 
-  useEffect(() => {
-    const path = location.pathname;
-    const lastSegment = path.substring(path.lastIndexOf('/') + 1);
-    if (majorImages[lastSegment]) {
-      setSelectedImage(majorImages[lastSegment]);
-    } else {
-      setSelectedImage(null);
-    }
-  }, [location.pathname]);
-
   return (
     <div className="min-h-screen bg-[#0d0d1a] text-white font-['Noto_Sans_KR']">
       <Header />
       <div className="relative h-[480px] bg-[#0d0d1a] overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-end pr-12">
-          <img src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png" alt="USW 배경 로고" className="w-[600px] opacity-10 object-contain" />
+          <img
+            src="https://www.suwon.ac.kr/usr/images/suwon/emblem_08_2024_6.png"
+            alt="USW 배경 로고"
+            className="w-[600px] opacity-10 object-contain"
+          />
         </div>
         <div className="relative z-10 text-center pt-60">
           <h1 className="text-5xl font-extrabold">학과/학부</h1>
@@ -158,10 +177,64 @@ const CollegeMajorPage = () => {
             ))}
           </div>
 
-          {activeTab === '소개' && college && (
-            <div className="bg-gray-50 p-6 rounded-xl shadow">
-              <h2 className="text-2xl font-bold mb-2">{college.name}</h2>
-              <p className="whitespace-pre-wrap text-gray-800">{college.description || '설명이 없습니다.'}</p>
+          {activeTab === '소개' && selectedMajor && (
+            <div className="bg-white text-black p-6 rounded-xl shadow space-y-6">
+              <h2 className="text-3xl font-bold text-blue-700">{selectedMajor.name} 전공 소개</h2>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">전공 개요</h3>
+                <p className="whitespace-pre-wrap text-gray-800">{selectedMajor.introduction}</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">학과 위치 및 연락처</h3>
+                <ul className="text-gray-700 space-y-1">
+                  <li>
+                    <strong>위치:</strong> {selectedMajor.location}
+                  </li>
+                  <li>
+                    <strong>전화:</strong> {selectedMajor.phone}
+                  </li>
+                  <li>
+                    <strong>팩스:</strong> {selectedMajor.fax}
+                  </li>
+                  <li>
+                    <strong>근무시간:</strong> {selectedMajor.officeHours}
+                  </li>
+                </ul>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">연구소 및 연구 프로젝트</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.researchCenter}</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">진로 및 자격증</h3>
+                <ul className="text-gray-800 list-disc pl-6">
+                  <li>
+                    <strong>진로:</strong> {selectedMajor.career}
+                  </li>
+                  <li>
+                    <strong>자격증:</strong> {selectedMajor.certifications}
+                  </li>
+                </ul>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">동아리 활동</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.clubs}</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">특화 프로그램</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.specialPrograms}</p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold mb-2">전공의 미래 전망</h3>
+                <p className="text-gray-800 whitespace-pre-wrap">{selectedMajor.future}</p>
+              </section>
             </div>
           )}
 
@@ -194,20 +267,24 @@ const CollegeMajorPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {courseList.length > 0 ? courseList.map(course => (
-                      <tr key={course.id} className="text-center">
-                        <td className="border p-2">{course.semester}</td>
-                        <td className="border p-2">{course.subjectCode}</td>
-                        <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
-                        <td className="border p-2">{course.completionType}</td>
-                        <td className="border p-2">{course.credit}</td>
-                        <td className="border p-2">{course.theoryHours}</td>
-                        <td className="border p-2">{course.practiceHours}</td>
-                        <td className="border p-2">{course.courseType}</td>
-                      </tr>
-                    )) : (
+                    {courseList.length > 0 ? (
+                      courseList.map(course => (
+                        <tr key={course.id} className="text-center">
+                          <td className="border p-2">{course.semester}</td>
+                          <td className="border p-2">{course.subjectCode}</td>
+                          <td className="border p-2 whitespace-pre-wrap">{course.name}</td>
+                          <td className="border p-2">{course.completionType}</td>
+                          <td className="border p-2">{course.credit}</td>
+                          <td className="border p-2">{course.theoryHours}</td>
+                          <td className="border p-2">{course.practiceHours}</td>
+                          <td className="border p-2">{course.courseType}</td>
+                        </tr>
+                      ))
+                    ) : (
                       <tr>
-                        <td colSpan={8} className="border p-4 text-center text-gray-500">데이터가 없습니다.</td>
+                        <td colSpan={8} className="border p-4 text-center text-gray-500">
+                          데이터가 없습니다.
+                        </td>
                       </tr>
                     )}
                   </tbody>
