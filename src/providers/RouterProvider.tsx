@@ -11,6 +11,7 @@ import Location from '../pages/Location';
 import NoticeDetailPage from '../pages/NoticeDetailPage';
 import NoticePage from '../pages/NoticePage';
 import ProfessorPage from '../pages/ProfessorPage';
+import VisionPage from '../pages/VisionPage';
 
 const RouterProvider = () => {
   return (
@@ -26,6 +27,7 @@ const RouterProvider = () => {
         <Route path="/about/location" element={<Location />} />
         <Route path="/about/professor" element={<ProfessorPage />} /> 
         <Route path="/about" element={<CollegeMajorPage />} />
+        <Route path="/about/vision" element={<VisionPage />} />
         <Route path="/board/:categoryId" element={<BoardPage />} />
         <Route path="/board-posts/write" element={<BoardWritePage />} />
         <Route path="/board-posts/:id" element={<BoardDetailPage />} />
@@ -33,7 +35,7 @@ const RouterProvider = () => {
         <Route path="/departments/computer" element={<CollegeMajorPage />} /> 
         <Route path="/departments/ict" element={<CollegeMajorPage />} /> 
         <Route path="/departments/data" element={<CollegeMajorPage />} />
-        <Route path="/departments/cloud" element={<CollegeMajorPage />} /> 
+        <Route path="/departments/cloud" element={<CollegeMajorPage />} />
         {/* Add more routes here as needed */}
       </Routes>
     </Router>
