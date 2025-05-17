@@ -15,7 +15,7 @@ interface BoardPost {
 }
 
 const categories = [
-  { label: '전체', value: 'all' },
+  { label: '전체', value: '0' },
   { label: '뉴스', value: '1' },
   { label: '학생이야기', value: '2' },
   { label: '졸업작품', value: '3' },

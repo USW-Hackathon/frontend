@@ -9,6 +9,20 @@ export default function ChatWidget() {
       {/* 챗봇 UI */}
       {open && (
         <div className="fixed bottom-20 right-6 w-[380px] max-h-[1000px] bg-white border shadow-xl rounded-lg z-50 overflow-hidden mb-3">
+          <div className="flex flex-col items-center mt-2 mb-4">
+            <span className="text-lg font-bold text-gray-900 mt-4">Chat bot</span>
+            <span className="flex items-center text-sm text-green-600 mt-0">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+              Online
+            </span>
+          </div>
+          <div className="absolute top-3 right-4 w-16 h-16">
+            <img
+              src="/mascoat.svg"
+              alt="챗봇 아이콘"
+              className="w-full h-full object-contain"
+            />
+          </div>
           <ChatBot />
         </div>
       )}
