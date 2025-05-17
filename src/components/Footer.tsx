@@ -4,7 +4,6 @@ const Footer = () => {
   return (
     <footer className="relative z-50 bg-[#3b3b3b] text-white py-12 px-4 text-sm">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
-        
         {/* 왼쪽: 주소 및 연락처 */}
         <div className="text-center md:text-left space-y-4 md:border-r md:pr-6 border-white">
           <div className="flex justify-center md:justify-start items-center gap-3">
@@ -17,12 +16,14 @@ const Footer = () => {
             </div>
             <p>
               <span className="block">18323</span>
-              경기도 화성시 봉담읍 와우안길 17<br />
+              경기도 화성시 봉담읍 와우안길 17
+              <br />
               수원대학교
             </p>
           </div>
           <div className="font-bold text-lg mt-4">
-            전화번호안내 <span className="text-white font-extrabold">031-220-2114</span><br />
+            전화번호안내 <span className="text-white font-extrabold">031-220-2114</span>
+            <br />
             입학 <span className="text-white font-extrabold">031-229-8420</span>
           </div>
         </div>
@@ -35,16 +36,31 @@ const Footer = () => {
             className="w-40 opacity-100"
           />
           <div className="flex gap-4 text-2xl">
-            <a href="#" aria-label="Facebook">
+            <a
+              href="https://www.facebook.com/SuwonUniv"
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="https://cdn-icons-png.flaticon.com/128/145/145802.png" className="w-9 opacity-100" />
             </a>
-            <a href="#" aria-label="Instagram">
+            <a
+              href="https://youtube.com/@rut2025?feature=shared"
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="https://cdn-icons-png.flaticon.com/128/3670/3670147.png" className="w-9 opacity-100" />
             </a>
-            <a href="#" aria-label="YouTube">
+            <a
+              href="https://www.instagram.com/usw_rut_22nd?igsh=MTU1cDFrMjlidXRhNg=="
+              aria-label="YouTube"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="https://cdn-icons-png.flaticon.com/128/4138/4138124.png" className="w-9 opacity-100" />
             </a>
-            <a href="#" aria-label="Chat">
+            <a href="http://pf.kakao.com/_BcxgST" aria-label="Chat" target="_blank" rel="noopener noreferrer">
               <img src="https://cdn-icons-png.flaticon.com/128/3669/3669973.png" className="w-9 opacity-100" />
             </a>
           </div>
@@ -54,15 +70,26 @@ const Footer = () => {
         {/* 오른쪽: 링크 목록 */}
         <div className="text-center md:text-right space-y-2 md:border-l md:pl-6 border-white">
           <div className="flex flex-col gap-1 md:items-end">
-            <a href="#" className="hover:underline">지능형 SW 융합대학</a>
-            <a href="#" className="hover:underline">찾아오시는 길</a>
-            <a href="#" className="hover:underline">대학안내</a>
-            <a href="#" className="hover:underline">학과/학부</a>
-            <a href="#" className="hover:underline">공지사항</a>
-            <a href="#" className="hover:underline">게시판</a>
+            <a href="#" className="hover:underline">
+              지능형 SW 융합대학
+            </a>
+            <a href="#" className="hover:underline">
+              찾아오시는 길
+            </a>
+            <a href="#" className="hover:underline">
+              대학안내
+            </a>
+            <a href="#" className="hover:underline">
+              학과/학부
+            </a>
+            <a href="#" className="hover:underline">
+              공지사항
+            </a>
+            <a href="#" className="hover:underline">
+              게시판
+            </a>
           </div>
         </div>
-        
       </div>
     </footer>
   );
