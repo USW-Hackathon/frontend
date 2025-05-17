@@ -167,8 +167,8 @@ const ProfessorPage = () => {
             )}
           </div>
         </div>
-        ＜Footer ／＞
-
+          
+        <Footer />
       {/* marquee 애니메이션 스타일 */}
       <style>{`
         @keyframes marquee {
