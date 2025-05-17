@@ -75,36 +75,6 @@ const HomePage = () => {
         </section>
 
         {/* 메인 섹션 2 */}
-        <section className="h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center drop-shadow-lg">어떤 학부가 궁금하세요?</h2>
-          <p className="text-gray-300 text-center mb-12 max-w-2xl drop-shadow-md">
-            수원대학교 지능형SW융합대학은 다양한 학부와 전공을 통해 실무 중심의 교육을 제공합니다. 원하는 학부를 선택해
-            자세한 정보를 확인해보세요.
-          </p>
-
-          {/* 카드 컨테이너 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
-            {[
-              { title: '컴퓨터학부', link: '/departments/computer' },
-              { title: '정보통신학부', link: '/departments/ict' },
-              { title: '데이터과학부', link: '/departments/data' },
-              { title: '클라우드융복합', link: '/departments/cloud' },
-            ].map((dept, idx) => (
-              <a
-                key={idx}
-                href={dept.link}
-                className="rounded-2xl p-6 h-40 flex flex-col justify-center items-center
-                   bg-white text-black border border-gray-200 shadow-md
-                   transition duration-300 hover:shadow-lg hover:-translate-y-1"
-              >
-                <h3 className="text-xl font-bold mb-2">{dept.title}</h3>
-                <p className="text-sm text-gray-600">자세히 보기 →</p>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* 메인 섹션 3 */}
         <section
           ref={section2Ref}
           className="h-screen flex items-center justify-center snap-start text-white px-4 md:px-12"
@@ -179,6 +149,36 @@ const HomePage = () => {
                 ))}
               </ul>
             </div>
+          </div>
+        </section>
+        
+        {/* 메인 섹션 3 */}
+        <section className="h-screen flex flex-col items-center justify-center snap-start text-white px-4 md:px-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center drop-shadow-lg">어떤 학부가 궁금하세요?</h2>
+          <p className="text-gray-300 text-center mb-12 max-w-2xl drop-shadow-md">
+            수원대학교 지능형SW융합대학은 다양한 학부와 전공을 통해 실무 중심의 교육을 제공합니다. 원하는 학부를 선택해
+            자세한 정보를 확인해보세요.
+          </p>
+
+          {/* 카드 컨테이너 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
+            {[
+              { title: '컴퓨터학부', link: '/departments/computer' },
+              { title: '정보통신학부', link: '/departments/ict' },
+              { title: '데이터과학부', link: '/departments/data' },
+              { title: '클라우드융복합', link: '/departments/cloud' },
+            ].map((dept, idx) => (
+              <a
+                key={idx}
+                href={dept.link}
+                className="rounded-2xl p-6 h-40 flex flex-col justify-center items-center
+                   bg-white text-black border border-gray-200 shadow-md
+                   transition duration-300 hover:shadow-lg hover:-translate-y-1"
+              >
+                <h3 className="text-xl font-bold mb-2">{dept.title}</h3>
+                <p className="text-sm text-gray-600">자세히 보기 →</p>
+              </a>
+            ))}
           </div>
         </section>
 
