@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import useLogin from '@/hooks/useLogin';
-import { getCookie, setCookie } from '@/utils/cookies';
 import { getAllNotice, getCategoryNotice } from '../api/notice';
 import Header from '../components/Common/Header';
+import { getCookie, setCookie } from '@/utils/cookies';
 
 interface Notice {
   id: number;
@@ -83,15 +82,13 @@ const HomePage = () => {
     <div className="relative h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
       <Header />
       <video
-        className="fixed top-0 left-0 w-full h-full object-cover z-0 [::-webkit-media-controls]:hidden"
+        className="fixed top-0 left-0 w-full h-full object-cover z-0"
         src="https://www.suwon.ac.kr/usr/file/USW_video.mp4"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
       />
-
       <div className="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
       <div className="relative z-20">
         <section ref={section1Ref} className="h-screen flex items-center justify-center snap-start">
@@ -103,10 +100,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section
-          ref={section2Ref}
-          className="h-auto flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-16"
-        >
+        <section ref={section2Ref} className="h-auto flex flex-col items-center justify-center snap-start text-white px-4 md:px-12 py-16">
           <div className="flex flex-col w-full max-w-7xl justify-start gap-16 mt-10">
             <div className="flex flex-col md:flex-row gap-8">
               {username ? (
@@ -124,10 +118,7 @@ const HomePage = () => {
                   </button>
                 </div>
               ) : (
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="bg-white/15 text-white p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="bg-white/15 text-white p-6 rounded-2xl shadow-md w-full md:w-1/3 flex flex-col justify-between">
                   <h2 className="text-2xl font-bold mb-6 text-center text-white">LOGIN</h2>
                   <div className="mb-4">
                     <input
@@ -147,19 +138,12 @@ const HomePage = () => {
                     />
                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300"
-                  >
+                  <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-blue-900 transition-colors duration-300">
                     로그인
                   </button>
                   <div className="mt-4 p-3 bg-red-50 text-xs text-left text-gray-800 rounded-md border border-red-200">
-                    <p className="mb-1">
-                      <span className="font-semibold text-red-600">※ 아이디 :</span> 학번 또는 사번
-                    </p>
-                    <p>
-                      <span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!
-                    </p>
+                    <p className="mb-1"><span className="font-semibold text-red-600">※ 아이디 :</span> 학번 또는 사번</p>
+                    <p><span className="font-semibold text-red-600">※ 초기비밀번호 :</span> 생년월일(YYMMDD) + 12!</p>
                   </div>
                 </form>
               )}
@@ -167,10 +151,7 @@ const HomePage = () => {
               <div className="flex flex-col w-full md:w-2/3">
                 <div className="flex flex-col h-full">
                   <div className="bg-white/0 p-4 rounded-2xl text-white h-1/3">
-                    <h2
-                      onClick={() => navigate('/notice')}
-                      className="text-3xl md:text-4xl font-bold cursor-pointer hover:text-blue-400 mb-5 transition duration-300"
-                    >
+                    <h2 onClick={() => navigate('/notice')} className="text-3xl md:text-4xl font-bold cursor-pointer hover:text-blue-400 mb-5 transition duration-300">
                       공지사항
                     </h2>
                     <h3 className="text-xl font-bold mb-2">
@@ -207,7 +188,7 @@ const HomePage = () => {
                   <li
                     key={index}
                     className="border-b border-white/30 flex justify-between px-4 py-2 rounded hover:bg-black hover:bg-opacity-20 hover:shadow-inner hover:-translate-y-[2px] transition duration-300 cursor-pointer"
-                    onClick={() => navigate(`/notice-detail/${item.id}`)} // ✅ 클릭 시 이동
+                    onClick={() => navigate(`/notice-detail/${item.id}`)}  // ✅ 클릭 시 이동
                   >
                     <span className="font-bold">{item.title}</span>
                     <span className="text-gray-400">{item.createdAt?.split('T')[0]}</span>
@@ -290,9 +271,7 @@ const HomePage = () => {
             <div className="group border border-yellow-500 text-yellow-400 p-5 rounded-xl hover:bg-yellow-500 hover:text-black transition duration-300">
               <h3 className="text-lg font-bold mb-2">졸업작품/인터뷰</h3>
               <p className="text-sm mb-3">우수 졸업작품 소개 & 졸업생 인터뷰</p>
-              <Link to="/board/3" className="underline text-sm">
-                졸업 정보 보러가기 ▶
-              </Link>
+              <button className="underline text-sm">영상 보러가기 ▶</button>
             </div>
           </div>
 
