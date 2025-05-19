@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getNotice } from '../api/notice';
-import Header from '../components/Common/Header';
-import { getAllNotice } from '../api/notice';
 import Footer from '@/components/Footer';
-
-
+import { getNotice } from '../api/notice';
+import { getAllNotice } from '../api/notice';
+import Header from '../components/Common/Header';
+import MarqueeBanner from '@/components/MarqueeBanner';
 
 interface Notice {
   id: number;
@@ -23,31 +22,28 @@ const NoticeDetailPage = () => {
   const [prevPost, setPrevPost] = useState<Notice | null>(null);
   const [nextPost, setNextPost] = useState<Notice | null>(null);
 
-
-
   useEffect(() => {
-  const fetchNotice = async () => {
-    try {
-      const res = await getNotice({ id: Number(id) });
-      setNotice(res.data);
+    const fetchNotice = async () => {
+      try {
+        const res = await getNotice({ id: Number(id) });
+        setNotice(res.data);
 
-      const listRes = await getAllNotice({ page: 1, size: 100 }); // 전체 글을 많이 불러오기
-      const list: Notice[] = listRes.data.content;
+        const listRes = await getAllNotice({ page: 1, size: 100 }); // 전체 글을 많이 불러오기
+        const list: Notice[] = listRes.data.content;
 
-      const currentIndex = list.findIndex(item => item.id === Number(id));
+        const currentIndex = list.findIndex(item => item.id === Number(id));
 
-      if (currentIndex !== -1) {
-        setPrevPost(list[currentIndex - 1] || null);
-        setNextPost(list[currentIndex + 1] || null);
+        if (currentIndex !== -1) {
+          setPrevPost(list[currentIndex - 1] || null);
+          setNextPost(list[currentIndex + 1] || null);
+        }
+      } catch (e) {
+        console.error('공지사항 상세 조회 실패:', e);
       }
-    } catch (e) {
-      console.error('공지사항 상세 조회 실패:', e);
-    }
-  };
+    };
 
-  fetchNotice();
-}, [id]);
-
+    fetchNotice();
+  }, [id]);
 
   if (!notice) return <div className="text-center mt-20 text-gray-500">로딩 중...</div>;
 
@@ -70,14 +66,7 @@ const NoticeDetailPage = () => {
         </div>
       </div>
 
-      {/* 마퀴 배너 */}
-      <div className="bg-[#148cb1] overflow-hidden whitespace-nowrap h-20 flex items-center">
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-        </div>
-      </div>
+      <MarqueeBanner />
 
       {/* 본문 영역 */}
       <div className="w-full bg-white text-black">
@@ -143,17 +132,6 @@ const NoticeDetailPage = () => {
         </div>
       </div>
       <Footer />
-
-      {/* marquee 애니메이션 */}
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 150s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };

@@ -145,16 +145,6 @@ const NoticePage = () => {
         </div>
       </div>
       <Footer />
-      {/* marquee 애니메이션 */}
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 150s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };

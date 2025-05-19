@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getBoardPostId, deleteBoardPostId } from '../api/boardPost';
-import Header from '../components/Common/Header';
 import Footer from '@/components/Footer';
+import { deleteBoardPostId, getBoardPostId } from '../api/boardPost';
+import Header from '../components/Common/Header';
+import MarqueeBanner from '@/components/MarqueeBanner';
 
 interface BoardPost {
   id: number;
@@ -90,14 +91,7 @@ const BoardDetailPage = () => {
         </div>
       </div>
 
-      {/* 마퀴 배너 */}
-      <div className="bg-[#148cb1] overflow-hidden whitespace-nowrap h-20 flex items-center">
-        <div className="animate-marquee whitespace-nowrap inline-block">
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-          <span className="text-4xl font-extrabold text-black pr-20">COLLEGE OF INTELLIGENT SOFTWARE CONVERGENCE.</span>
-        </div>
-      </div>
+      <MarqueeBanner />
 
       {/* 게시글 상세 영역 */}
       <div className="w-full bg-white text-black">
@@ -161,12 +155,11 @@ const BoardDetailPage = () => {
               목록으로 돌아가기
             </button>
             {/* 삭제 기능 사용 시 주석 해제 */}
-            { <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              삭제
-            </button>}
+            {
+              <button onClick={handleDelete} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                삭제
+              </button>
+            }
           </div>
         </div>
       </div>

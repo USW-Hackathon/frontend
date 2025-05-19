@@ -13,6 +13,7 @@ import infot from '@/assets/infot.png';
 import MarqueeBanner from '@/components/MarqueeBanner';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
+import Footer from '@/components/Footer';
 
 interface College {
   id: number;
@@ -50,11 +51,11 @@ interface Course {
   courseType: string;
 }
 
-const majorImages: Record<string, { src: string; label: string; value: number}> = {
-  computer: { src: com, label: '컴퓨터SW',value: 1},
-  data: { src: data, label: '데이터 과학부' ,value: 2},
-  ict: { src: info, label: '정보통신' ,value: 3},
-  cloud: { src: infot, label: '클라우드융복합',value: 4 },
+const majorImages: Record<string, { src: string; label: string; value: number }> = {
+  computer: { src: com, label: '컴퓨터SW', value: 1 },
+  data: { src: data, label: '데이터 과학부', value: 2 },
+  ict: { src: info, label: '정보통신', value: 3 },
+  cloud: { src: infot, label: '클라우드융복합', value: 4 },
 };
 
 const floorImages: Record<string, string> = {
@@ -323,6 +324,7 @@ const CollegeMajorPage = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
