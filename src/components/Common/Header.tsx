@@ -26,7 +26,7 @@ const menus = [
     children: [
       { name: '컴퓨터학부', path: '/departments/computer/1' },
       { name: '정보통신학부', path: '/departments/ict/3' },
-      { name: '데이터과학부', path: '/departments/datascience/5' },
+      { name: '데이터과학부', path: '/departments/data/5' },
       { name: '클라우드융복합', path: '/departments/cloud/6' },
     ],
   },
