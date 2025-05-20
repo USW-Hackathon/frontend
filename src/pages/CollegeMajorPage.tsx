@@ -81,27 +81,18 @@ const CollegeMajorPage = () => {
   const selectedCollegeId = '1';
 
   useEffect(() => {
-    const segments = location.pathname.split('/');
-    const alias = segments.length >= 2 ? segments[segments.length - 2] : '';
-    const image = majorImages[alias];
-    setSelectedImage(image ?? null);
+  const segments = location.pathname.split('/');
+  const lastSegment = segments[segments.length - 1];
+  const parsedMajorId = parseInt(lastSegment, 10);
 
-    const fetchMajorInfo = async () => {
-      try {
-        const res = await axios.get(`http://223.195.111.30:5062/major/${image?.value}`);
-        if (res.data?.id) {
-          setMajorId(res.data.id);
-          fetchMajorDetail(res.data.id);
-        } else {
-          console.warn('majorId를 찾을 수 없습니다:', alias);
-        }
-      } catch (err) {
-        console.error('majorId 조회 실패:', err);
-      }
-    };
+  if (!isNaN(parsedMajorId)) {
+    setMajorId(parsedMajorId);
+    fetchMajorDetail(parsedMajorId);
+  } else {
+    console.warn('유효하지 않은 majorId:', lastSegment);
+  }
+}, [location.pathname]);
 
-    fetchMajorInfo();
-  }, [location.pathname]);
 
   useEffect(() => {
     const fetchCollegeData = async () => {
