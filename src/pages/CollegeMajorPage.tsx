@@ -10,10 +10,10 @@ import ict4F from '@/assets/ict_4F.png';
 import ict5F from '@/assets/ict_5F.png';
 import info from '@/assets/info.png';
 import infot from '@/assets/infot.png';
+import Footer from '@/components/Footer';
 import MarqueeBanner from '@/components/MarqueeBanner';
 import SubHeader from '@/components/SubHeader';
 import Header from '../components/Common/Header';
-import Footer from '@/components/Footer';
 
 interface College {
   id: number;
@@ -80,19 +80,28 @@ const CollegeMajorPage = () => {
   const [courseList, setCourseList] = useState<Course[]>([]);
   const selectedCollegeId = '1';
 
+  const majorImagesById: Record<number, { src: string; label: string } | undefined> = {
+    1: { src: com, label: '컴퓨터SW' },
+    2: { src: com, label: '미디어SW' },
+    3: { src: info, label: '정보보호' },
+    4: { src: infot, label: '정보통신' },
+    5: { src: data, label: '데이터과학' },
+    6: undefined, // 이미지 없음 처리
+  };
+
   useEffect(() => {
-  const segments = location.pathname.split('/');
-  const lastSegment = segments[segments.length - 1];
-  const parsedMajorId = parseInt(lastSegment, 10);
+    const segments = location.pathname.split('/');
+    const lastSegment = segments[segments.length - 1];
+    const parsedMajorId = parseInt(lastSegment, 10);
 
-  if (!isNaN(parsedMajorId)) {
-    setMajorId(parsedMajorId);
-    fetchMajorDetail(parsedMajorId);
-  } else {
-    console.warn('유효하지 않은 majorId:', lastSegment);
-  }
-}, [location.pathname]);
-
+    if (!isNaN(parsedMajorId)) {
+      setMajorId(parsedMajorId);
+      fetchMajorDetail(parsedMajorId);
+      setSelectedImage(majorImagesById[parsedMajorId] || null);
+    } else {
+      console.warn('유효하지 않은 majorId:', lastSegment);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchCollegeData = async () => {
