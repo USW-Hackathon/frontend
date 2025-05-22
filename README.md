@@ -1,54 +1,121 @@
-# React + TypeScript + Vite
+# 💻 LLM을 활용한 수원대학교 지능형SW융합대학 웹사이트
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **해커톤 기간**: 2025.05.13 ~ 2025.05.18
+> 
 
-Currently, two official plugins are available:
+> **접속 링크**: http://223.195.111.30:5065
+> 
+> 
+> **배포 환경**: 수원대학교 자체 서버
+> 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 📌 프로젝트 개요
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+수원대학교 지능형SW융합대학의 학생을 위한 통합 정보 제공 웹사이트입니다.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+학과 소개, 공지사항, 게시판, 찾아오시는 길 등 학교 생활에 필요한 다양한 기능을 하나의 웹사이트로 제공합니다.
+
+1주일간의 해커톤을 통해 기획, 개발, 배포까지 완성되었습니다.
+
+---
+
+## ✨ 주요 기능
+
+### ✅ 로그인
+
+- 실제 학교 포털 연동을 고려하여 설계된 임시 로그인 시스템
+- 관리자가 미리 등록한 학번(ID)으로 로그인 가능
+- 비밀번호는 생년월일(YYYYMMDD) + '12' 형식으로 입력
+
+### 🏠 홈
+
+- 배경 영상 위에 로그인 UI와 실시간 공지사항 카드 노출
+- 카테고리별(학부, 대학원, 취업) 공지사항 요약 제공
+
+### 🧭 지능형SW융합대학 위치 안내
+
+- 정문 → 지능형SW융합대학 도보 경로 안내
+- 예상 도보 시간 제공 (예: 약 13분)
+- 통학버스, 대중교통 정보 및 연락처 제공
+
+### 🏢 학과/학부 안내
+
+- 총 4개 학부로 구성되어 있으며, 각 학부 아래 전공별로 상세 페이지가 존재합니다:
+    - 컴퓨터학부: 컴퓨터SW / 미디어SW
+    - 정보통신학부: 정보통신 / 정보보호
+    - 데이터과학부
+    - 클라우드융복합
+
+### 📄 전공별 상세 안내 페이지 구성
+
+- 각 전공의 세부 페이지는 다음과 같은 **탭 구조**로 구성되어 있습니다:
+    - **`소개`**: 전공 개요 및 특성
+    - **`교육과정`**: 학년별 이수 흐름 안내
+    - **`교과목 안내`**: 전공 로드맵 이미지로 커리큘럼 구조 시각화
+    - **`시설 안내`**: 층별 내부 도식화 이미지 제공
+
+### 📣 공지사항
+
+- 카테고리별: 학부 / 대학원 / 취업
+- 개별 공지 클릭 시 상세 내용 페이지 이동
+
+### 🗣️ 게시판
+
+- 뉴스 / 학생 이야기 / 졸업작품
+- 제목, 작성자, 조회수, 날짜 표시 및 단건 조회 가능
+
+### 🤖 챗봇
+
+- GPT-4 기반 학과 정보 안내 챗봇 기능 제공
+- "학과", "교수", "전공" 등 주요 키워드 포함 질문에 대해 정보 제공
+- LLM 프롬프트 인젝션 방지를 위한 검열 AI 프롬프트 적용 (Reg 방식)
+- 학교 내부 데이터 기반으로 마크다운 형식 응답
+- 잘못된 질문 또는 범위 외 질문 시 안내 메시지 출력
+
+---
+
+## 🛠 기술 스택
+
+### 🖥 프론트엔드
+
+- React + TypeScript
+- Tailwind CSS
+- Axios
+
+### 🖥 백엔드
+
+- Spring Boot
+- Spring Security + JWT 인증
+- JPA
+- MySQL
+- Swagger (API 문서 자동 생성)
+
+---
+
+## 📁 프로젝트 구조
+
+### 📁 frontend/
+
+```
+frontend/
+├── src/
+│   ├── pages/            # 주요 페이지
+│   ├── components/       # 공통 UI 컴포넌트
+│   ├── api/              # API 통신 모듈
+│   ├── assets/           # 이미지 등 정적 리소스
+│   └── App.tsx           # 루트 컴포넌트
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 📁 backend/
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```
+backend/
+├── src/main/java/com/ict/Hackathon
+│   ├── controller/       # REST API 엔드포인트
+│   ├── service/          # 비즈니스 로직
+│   ├── dto/              # 요청/응답 Dto 정의
+│   ├── entity/           # DB 엔티티 모델
+│   └── config/           # JWT, CORS 등 설정
 ```
