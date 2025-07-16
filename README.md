@@ -20,6 +20,8 @@
 1주일간의 해커톤을 통해 기획, 개발, 배포까지 완성되었습니다.
 
 ---
+<img width="865" height="411" alt="Image" src="https://github.com/user-attachments/assets/f3fdf9a4-7c7b-4feb-8fdb-d95b1b7dea37" />
+<img width="841" height="382" alt="Image" src="https://github.com/user-attachments/assets/43bd5041-d5ed-4a7b-ae12-ab079cd51d23" />
 
 ## ✨ 주요 기능
 
